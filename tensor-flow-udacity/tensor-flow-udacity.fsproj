@@ -56,6 +56,7 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="r_provider_test.fs" />
+    <Compile Include="utils.fs" />
     <Compile Include="a_1_p_1.fs" />
     <Compile Include="a_1_p_1.test.fs" />
     <Compile Include="a_1_p_2.fs" />
@@ -63,7 +64,6 @@
     <Compile Include="Program.fs" />
     <None Include="App.config" />
     <None Include="readme.md" />
-    <None Include=".gitignore" />
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

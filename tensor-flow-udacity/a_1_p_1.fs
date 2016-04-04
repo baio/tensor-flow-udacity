@@ -29,7 +29,7 @@ let getPixels (bmp:Bitmap) =
   
   Array2D.zeroCreate<int> bmp.Width bmp.Height
   |> Array2D.mapi mapPixel
-  |> Array2D.map normalizePixelColors
+  
 
 let loadBitmap(fileName: System.String) =  
     
@@ -39,6 +39,13 @@ let loadBitmap(fileName: System.String) =
       raise(new System.Exception("Image size don't match"))
   
     getPixels bitmap
+
+
+let loadBitmapNormalized(fileName: System.String) =  
+    
+    fileName     
+    |> loadBitmap
+    |> Array2D.map normalizePixelColors
 
 
 let flatSingleImagePixels (pixels : (_ * _ * _)[,]) =
@@ -78,7 +85,7 @@ let writeBinary (path: string) (images : (single * single * single)[,][]) =
 
 let readLetterFolder folder =
     System.IO.Directory.EnumerateFiles(folder) 
-    |> Seq.map loadBitmap
+    |> Seq.map loadBitmapNormalized
     |> Seq.toArray
 
 let getFolderLetter (folder : string) =

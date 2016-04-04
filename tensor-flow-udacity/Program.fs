@@ -2,9 +2,9 @@
 
 open Fuchu
 
-open a_1_p_1;
-open a_1_p_2;
-open r_provider_test;
+//open a_1_p_1;
+//open a_1_p_2;
+//open r_provider_test;
 
 [<EntryPoint>]
 let main args = 
