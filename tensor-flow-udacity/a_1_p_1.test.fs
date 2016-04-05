@@ -45,8 +45,7 @@ let a_1_p_1_Test_4 =
             setPar [|1;2|]
             let path = "../../../data/letters/A/a.png"
             
-            let pixels1 = path |> loadBitmapNormalized |> flatSingleImagePixels |> Seq.chunkBySize 3 |> Seq.map(fun m -> m |> list2rgb |> getGrayScale) |> Seq.toArray
-            pixels1 |> Array.map (fun m -> (float)m) |> showImage |> ignore
-
+            let pixels1 = path |> loadBitmapNormalized |> flatSingleImagePixels |> Seq.chunkBySize 3 |> Seq.map(fun m -> m |> list2rgb |> getGrayScale) |> Seq.toArray            
             let pixels2 = path |> loadBitmap |> flatSingleImagePixels |> Seq.chunkBySize 3 |> Seq.map(fun m -> m |> list2rgb |> getGrayScale) |> Seq.toArray
-            pixels2 |> Array.map (fun m -> (float)m) |> showImage |> ignore
+            
+            [|pixels1; pixels2|] |> showImages 
