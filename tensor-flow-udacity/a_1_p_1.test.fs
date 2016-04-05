@@ -5,8 +5,9 @@ open a_1_p_1
 
 open Fuchu
 
-let list2rgb (s : byte array) =
-    (single)s.[0], (single)s.[1], (single)s.[2]
+
+let list2rgb(s : _ array) =
+    s.[0], s.[1], s.[2]
 
 
 [<Tests>]
@@ -39,9 +40,13 @@ let a_1_p_1_Test_3 =
 
 [<Tests>]
 let a_1_p_1_Test_4 = 
-    testCase "Read letter and show image" <| 
+    testCase "Read letter and show un / normalized image" <| 
         fun _ -> 
-
+            setPar [|1;2|]
             let path = "../../../data/letters/A/a.png"
-            let pixels = path |> loadBitmap |> flatSingleImagePixels |> Seq.chunkBySize 3 |> Seq.map(fun m -> m |> list2rgb |> getGrayScale) |> Seq.toArray
-            pixels |> Array.map (fun m -> (float)m) |> showImage |> ignore
+            
+            let pixels1 = path |> loadBitmapNormalized |> flatSingleImagePixels |> Seq.chunkBySize 3 |> Seq.map(fun m -> m |> list2rgb |> getGrayScale) |> Seq.toArray
+            pixels1 |> Array.map (fun m -> (float)m) |> showImage |> ignore
+
+            let pixels2 = path |> loadBitmap |> flatSingleImagePixels |> Seq.chunkBySize 3 |> Seq.map(fun m -> m |> list2rgb |> getGrayScale) |> Seq.toArray
+            pixels2 |> Array.map (fun m -> (float)m) |> showImage |> ignore
