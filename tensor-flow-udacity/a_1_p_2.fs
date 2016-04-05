@@ -48,7 +48,6 @@ let readFileAsBytesArray fileName =
         fileStream.Close()
     ar
 
-(*
 let readFileAndShowImage fileName = 
     fileName
     |> readFileAsBytesArray
@@ -56,6 +55,6 @@ let readFileAndShowImage fileName =
     |> Seq.toArray
     |> showImage
     |> ignore
-*)
+
 
     

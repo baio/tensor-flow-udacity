@@ -38,7 +38,7 @@ let a_1_p_1_Test_3 =
 
             Assert.Equal("Size of flatted array incorrect", 28 * 28, pixels.Length)
 
-[<Tests>]
+//[<Tests>]
 let a_1_p_1_Test_4 = 
     testCase "Read letter and show un / normalized image" <| 
         fun _ -> 
