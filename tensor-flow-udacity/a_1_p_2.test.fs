@@ -7,7 +7,7 @@ open Fuchu
 [<Tests>]
 let a_1_p_2_Test_2 = 
     
-    testCase "Read file and show image" <| 
+    testCase "Read file and show images" <| 
         fun _ ->
             let path = "../../../data/out/letters-bl/A.bl"
-            readFileAndShowImage path 
+            readFileAndShowImages path 3

@@ -38,9 +38,9 @@ let getPixels bytes =
     |> Seq.map(fun m -> m |> Array.toList |> getPixelfrom12bytes )
 
 
-let readFileAsBytesArray fileName =     
+let readFileAsBytesArray fileName sampleSize =     
     let width, height = IMAGE_SIZE
-    let ar = Array.zeroCreate(width * height * 12)
+    let ar = Array.zeroCreate(width * height * 12 * sampleSize)
     let fileStream = new System.IO.FileStream(fileName, System.IO.FileMode.Open, System.IO.FileAccess.Read)
     try        
         fileStream.Read(ar, 0, ar.Length) |> ignore
@@ -48,13 +48,15 @@ let readFileAsBytesArray fileName =
         fileStream.Close()
     ar
 
-let readFileAndShowImage fileName = 
-    fileName
-    |> readFileAsBytesArray
+
+let readFileAndShowImages fileName sampleSize =     
+    let width, height = IMAGE_SIZE
+    readFileAsBytesArray fileName sampleSize
     |> getPixels
+    |> Seq.chunkBySize (width * height)
+    |> Seq.map Seq.toArray
     |> Seq.toArray
-    |> showImage
-    |> ignore
+    |> showImages
 
 
     
