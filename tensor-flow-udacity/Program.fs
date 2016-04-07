@@ -10,11 +10,12 @@ open a_1_p_2;
 let main args = 
     
     //createAlphabitBinaries "../../../data/letters"  "../../../data/out/letters-bl"    
-    //1
+    readDirectoryAndShowImages 3 "../../../data/out/letters-bl"
+    1
     //let res = display_image()
     //let res = defaultMainThisAssembly args 
     //System.Console.ReadKey() |> ignore;
     //defaultMainThisAssembly args 
     //readFileAndShowImages "../../../data/out/letters-bl/A.bl" 3
     //1
-    defaultMainThisAssembly args 
+    //defaultMainThisAssembly args 
