@@ -31,7 +31,7 @@ let getPixels (bmp:Bitmap) =
   |> Array2D.mapi mapPixel
   
 
-let loadBitmap(fileName: System.String) =  
+let loadBitmap(fileName: string) =  
     
     let bitmap = new Bitmap(fileName)
       
@@ -42,10 +42,13 @@ let loadBitmap(fileName: System.String) =
 
 
 let loadBitmapNormalized(fileName: System.String) =  
-    
-    fileName     
-    |> loadBitmap
-    |> Array2D.map normalizePixelColors
+    try
+        fileName     
+        |> loadBitmap
+        |> Array2D.map normalizePixelColors
+        |> Option.Some
+    with
+        | _ -> Option.None
 
 
 let flatSingleImagePixels (pixels : (_ * _ * _)[,]) =
@@ -85,7 +88,7 @@ let writeBinary (path: string) (images : (single * single * single)[,][]) =
 
 let readLetterFolder folder =
     System.IO.Directory.EnumerateFiles(folder) 
-    |> Seq.map loadBitmapNormalized
+    |> Seq.choose loadBitmapNormalized
     |> Seq.toArray
 
 let getFolderLetter (folder : string) =
