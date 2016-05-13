@@ -7,7 +7,7 @@ let SELECT_OPTIONS = "
     1. Show letter
     2. Show normalized letter
     3. Create letters binaries
-    4. Show normalized letter
+    4. Show letter images from binaries
 "
 
 open a_1_p_1.flow
