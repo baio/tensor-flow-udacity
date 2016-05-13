@@ -28,7 +28,6 @@ let ``Read 'A' letter, flatenned array size should be 28 * 28 * 3, since each di
 [<Test>]
 let ``Read 'A' letter, grayscaled pixels length should be 28 * 28,  since each dimention is 28 and greyscaled color just one byte`` () =
         let path = getLetterPath "A/a"
-        let RGB2GrayScale (arr : byte array) = getGrayScale (arr.[0], arr.[1], arr.[2])
         let pixels = path |> loadBitmap |> flatSingleImagePixels |> Seq.chunkBySize 3 |> Seq.map(RGB2GrayScale) |> Seq.toArray
 
         pixels.Length |> should equal (28 * 28)

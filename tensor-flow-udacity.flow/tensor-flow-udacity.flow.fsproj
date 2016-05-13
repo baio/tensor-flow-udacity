@@ -5,15 +5,14 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>193d8178-cda4-40e7-b35f-e8c202a7f9e3</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <RootNamespace>tensor_flow_udacity</RootNamespace>
-    <AssemblyName>tensor_flow_udacity</AssemblyName>
+    <ProjectGuid>e32c1040-99ad-4482-bdad-d46f8163b5e9</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>tensor_flow_udacity.flow</RootNamespace>
+    <AssemblyName>tensor_flow_udacity.flow</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFSharpCoreVersion>4.4.0.0</TargetFSharpCoreVersion>
-    <Name>tensor-flow-udacity</Name>
-    <TargetFrameworkProfile />
+    <Name>tensor-flow-udacity.flow</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -24,7 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <DocumentationFile>bin\Debug\tensor_flow_udacity.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\tensor_flow_udacity.flow.XML</DocumentationFile>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -35,9 +34,38 @@
     <DefineConstants>TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <DocumentationFile>bin\Release\tensor_flow_udacity.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\tensor_flow_udacity.flow.XML</DocumentationFile>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Numerics" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="config.fs" />
+    <Compile Include="a_1_p_1.flow.fs" />
+    <Compile Include="a_1_p_2.flow.fs" />
+    <Compile Include="Program.fs" />
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\tensor-flow-udacity.r\tensor-flow-udacity.r.fsproj">
+      <Name>tensor-flow-udacity.r</Name>
+      <Project>{71c6865d-68f6-4556-a6f2-b7838184999c}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\tensor-flow-udacity\tensor-flow-udacity.fsproj">
+      <Name>tensor-flow-udacity</Name>
+      <Project>{193d8178-cda4-40e7-b35f-e8c202a7f9e3}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
   </PropertyGroup>
@@ -54,36 +82,6 @@
     </Otherwise>
   </Choose>
   <Import Project="$(FSharpTargetsPath)" />
-  <ItemGroup>
-    <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="utils.fs" />
-    <Compile Include="a_1_p_1.fs" />
-    <Compile Include="a_1_p_2.fs" />
-    <Compile Include="a_1_p_2.test.fs" />
-    <Compile Include="a_1_p_3.fs" />
-    <Compile Include="Program.fs" />
-    <None Include="App.config" />
-    <None Include="readme.md" />
-    <Content Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="FSharp.Core">
-      <HintPath>..\packages\FSharp.Core.4.0.0.1\lib\net40\FSharp.Core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="FSharp.Data.TypeProviders" />
-    <Reference Include="Fuchu">
-      <HintPath>..\packages\Fuchu.1.0.3.0\lib\Fuchu.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="mscorlib" />
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Data.Linq" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Numerics" />
-  </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

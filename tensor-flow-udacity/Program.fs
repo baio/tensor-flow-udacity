@@ -11,7 +11,7 @@ let main args =
     
     //createAlphabitBinaries "../../../.data/notMNIST_small"  "../../../.data/out/letters-bl"    
     //1
-    readDirectoryAndShowImages 5 "../../../.data/out/letters-bl"
+    //readDirectoryAndShowImages 5 "../../../.data/out/letters-bl"
     1
     //1
     //let res = display_image()

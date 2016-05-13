@@ -56,11 +56,11 @@ let readFileAndGetImages sampleSize fileName  =
     |> Seq.map Seq.toArray
     |> Seq.toArray    
 
-let readFileAndShowImages sampleSize fileName =     
+let readFileAndShowImages showImages sampleSize fileName =     
     readFileAndGetImages sampleSize fileName 
     |> showImages
 
-let readDirectoryAndShowImages sampleSize dirName =
+let readDirectoryAndShowImages showImages sampleSize dirName =
     dirName 
     |> System.IO.Directory.EnumerateFiles
     |> Seq.collect (fun f -> 
