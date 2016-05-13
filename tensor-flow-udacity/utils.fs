@@ -1,35 +1,14 @@
 ﻿module utils
 
-open RProvider
-open RProvider.graphics
-
 let IMAGE_SIZE = 28 , 28
 let PIXEL_DEPTH = 255
 
-
-let showImage (pixels: single array) = 
-    let width, height = IMAGE_SIZE
-    let pixels = pixels |> Array.map (fun f -> (float)f) //|> Array.rev
-    let mx = namedParams [ "data", box pixels; "nrow", box width; "ncol", box height; ] |> R.matrix
-    namedParams ["x", box mx; "xlab", box ""; "ylab", box ""; "axes", box false] |> R.image |> ignore
-
-    //namedParams [ "side", box "x"; "labels", box false; ] |> R.axis |> ignore
-
-
-let setPar (mfrow: int array) = 
-    //printf "%i" pixels.Length
-    //printf "%A" pixels
-    let mar= [|0.;0.;0.;0.|]
-    
-    namedParams [ "mfrow", box mfrow;  "mar", box mar;] |> R.par |> ignore
-
-let showImages (images: single[][]) = 
-    let width, height = IMAGE_SIZE    
+let showImages imageSize setPar showImage (images: single[][])  = 
     let n = images.Length    
     let n = if n <= 2 then 2 else System.Convert.ToInt32(System.Math.Round(System.Math.Sqrt((float)n))) + 1;
     printf "length %i" n
     setPar [|n; n|]
-    images |> Array.iter (fun f -> f |> showImage)
+    images |> Array.iter (fun f -> f |> showImage IMAGE_SIZE)
     
 
 //http://stackoverflow.com/questions/687261/converting-rgb-to-grayscale-intensity

@@ -10,4 +10,5 @@ let a_1_p_2_Test_2 =
     testCase "Read file and show images" <| 
         fun _ ->
             let path = "../../../data/out/letters-bl/A.bl"
-            readFileAndShowImages 3 path
+            printf "%s" path
+            //readFileAndShowImages 3 path
