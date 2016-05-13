@@ -6,7 +6,7 @@ open a_1_p_1;
 open a_1_p_2;
 //open r_provider_test;
 
-[<EntryPoint>]
+//[<EntryPoint>]
 let main args = 
     
     //createAlphabitBinaries "../../../.data/notMNIST_small"  "../../../.data/out/letters-bl"    
