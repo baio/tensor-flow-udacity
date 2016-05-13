@@ -7,8 +7,6 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "tensor-flow-udacity", "tens
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "tensor-flow-udacity.test", "tensor-flow-udacity.test\tensor-flow-udacity.test.fsproj", "{88BDBA81-74AE-4222-B866-EC8F83A1667F}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "xxx", "xxx\xxx.fsproj", "{09B09823-8DBF-49E7-999F-0570FCE97568}"
-EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "tensor-flow-udacity.r", "tensor-flow-udacity.r\tensor-flow-udacity.r.fsproj", "{71C6865D-68F6-4556-A6F2-B7838184999C}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "tensor-flow-udacity.flow", "tensor-flow-udacity.flow\tensor-flow-udacity.flow.fsproj", "{E32C1040-99AD-4482-BDAD-D46F8163B5E9}"
@@ -27,10 +25,6 @@ Global
 		{88BDBA81-74AE-4222-B866-EC8F83A1667F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{88BDBA81-74AE-4222-B866-EC8F83A1667F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{88BDBA81-74AE-4222-B866-EC8F83A1667F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{09B09823-8DBF-49E7-999F-0570FCE97568}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{09B09823-8DBF-49E7-999F-0570FCE97568}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{09B09823-8DBF-49E7-999F-0570FCE97568}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{09B09823-8DBF-49E7-999F-0570FCE97568}.Release|Any CPU.Build.0 = Release|Any CPU
 		{71C6865D-68F6-4556-A6F2-B7838184999C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{71C6865D-68F6-4556-A6F2-B7838184999C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{71C6865D-68F6-4556-A6F2-B7838184999C}.Release|Any CPU.ActiveCfg = Release|Any CPU
