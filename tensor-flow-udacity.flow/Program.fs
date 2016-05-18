@@ -8,10 +8,12 @@ let SELECT_OPTIONS = "
     2. Show normalized letter
     3. Create letters binaries
     4. Show letter images from binaries
+    5. Read letter numbers from binaries
 "
 
 open a_1_p_1.flow
 open a_1_p_2.flow
+open a_1_p_3.flow
 
 let showImages = utils.showImages tensor_flow_udacity.r.utils.setPar tensor_flow_udacity.r.utils.showImage 
 
@@ -22,6 +24,7 @@ let runOption (option : System.ConsoleKeyInfo) =
         | '2' -> showNormalizedLetter showImages
         | '3' -> createLetterBinaries()
         | '4' -> showLetterImagesFromBinaries showImages
+        | '5' -> readLetterNumbersFromBinaries()
         | _ -> printfn "X \\"
 
 

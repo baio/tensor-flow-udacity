@@ -31,3 +31,10 @@ let permute rnd (limits : int list) trainSize testSize validSize  =
     train, test, valid
 
 
+let readNumberOfLetters dirName (imageLength: int) = 
+    let fis = new System.IO.DirectoryInfo(dirName)    
+    let getLettersNumber fileLength = fileLength / (int64)imageLength
+    
+    fis.GetFiles() 
+    |> Array.map (fun fi -> fi.Name.Replace(fi.Extension, ""), (getLettersNumber fi.Length))
+

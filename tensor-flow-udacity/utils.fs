@@ -3,6 +3,8 @@
 let IMAGE_SIZE = 28 , 28
 let PIXEL_DEPTH = 255
 
+let IMAGE_LENGTH = fst(IMAGE_SIZE) * snd(IMAGE_SIZE)
+
 let showImages setPar showImage (images: single[][])  = 
     let n = images.Length    
     let n = if n <= 2 then 2 else System.Convert.ToInt32(System.Math.Round(System.Math.Sqrt((float)n))) + 1;
