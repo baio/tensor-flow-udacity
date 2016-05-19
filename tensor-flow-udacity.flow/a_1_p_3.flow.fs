@@ -9,3 +9,9 @@ let readLetterNumbersFromBinaries() =
     let number = readNumberOfLetters (getDataPath "out/letters-bl")  (IMAGE_LENGTH * 3 * 4)
     printf "Number of letters %A" number
     System.Console.ReadKey() |> ignore
+
+
+let readLetterNumbersFromBinaries1() = 
+    let number = readNumberOfLetters (getDataPath "out/letters-bl")  (IMAGE_LENGTH * 3 * 4)
+    printf "Number of letters %A" number
+    System.Console.ReadKey() |> ignore
