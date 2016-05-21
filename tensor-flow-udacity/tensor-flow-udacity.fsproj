@@ -56,6 +56,7 @@
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="measures.fs" />
     <Compile Include="utils.fs" />
     <Compile Include="a_1_p_1.fs" />
     <Compile Include="a_1_p_2.fs" />
@@ -63,6 +64,7 @@
     <None Include="App.config" />
     <None Include="readme.md" />
     <Content Include="packages.config" />
+    <None Include="test.fsx" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Core">

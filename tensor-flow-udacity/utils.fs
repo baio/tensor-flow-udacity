@@ -1,9 +1,11 @@
 ﻿module utils
 
-let IMAGE_SIZE = 28 , 28
+open measures
+
+let IMAGE_SIZE = 28, 28
 let PIXEL_DEPTH = 255
 
-let IMAGE_LENGTH = fst(IMAGE_SIZE) * snd(IMAGE_SIZE)
+let IMAGE_LENGTH =  fst(IMAGE_SIZE) * snd(IMAGE_SIZE) * 1<imagePixel>
 
 let showImages setPar showImage (images: single[][])  = 
     let n = images.Length    

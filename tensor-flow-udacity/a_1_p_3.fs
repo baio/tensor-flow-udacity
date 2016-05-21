@@ -1,5 +1,6 @@
 ﻿module a_1_p_3
 
+open measures
 (*
 Problem 3
 Another check: we expect the data to be balanced across classes. Verify that.
@@ -32,7 +33,7 @@ let takeEveryNth n lst =
       |> List.filter (fun (el, i) -> i % n = 0) // Take every nth element
       |> List.map fst                               // Drop index from the result
 
-let readNumberOfLetters dirName (imageLength: int) = 
+let readNumberOfLetters dirName (imageLength: int<imageByte>) = 
     let fis = new System.IO.DirectoryInfo(dirName)    
     let getLettersNumber fileLength = (int)(fileLength / (int64)imageLength)
     
@@ -50,7 +51,6 @@ let letterPermutes (numberOfLetters : (string * int) list) rnd trainSize testSiz
 
     // t:[a; b;], tt:[a; b;], v:[a; b;]
     let l1 = List.concat([t; tt; v]) 
-
     //[t:a, t:b, tt:a, tt:b, v:a, v:b]    
     let l2 = List.init t.Length (fun i -> takeEveryNth t.Length l1.[i..])
     // [[t:a; tt:a, v:a]; [t:b; tt:b; v:b]]
@@ -60,7 +60,6 @@ let letterPermutes (numberOfLetters : (string * int) list) rnd trainSize testSiz
     numberOfLetters 
     |> List.zip l2
     |> List.map(fun (prs, letter) -> fst letter, (setsList2Tulpe prs))
-    //(prs |> List.map (fun f -> f.[0], f.[1], f.[2]))
     
 
 
