@@ -10,6 +10,8 @@ let SELECT_OPTIONS = "
     4. Show letter images from binaries
     5. Read letter numbers from binaries
     6. Permutes - Read bytes from binaries
+    7. Permutes and read
+    8. Permutes and show
 "
 
 open a_1_p_1.flow
@@ -27,6 +29,8 @@ let runOption (option : System.ConsoleKeyInfo) =
         | '4' -> showLetterImagesFromBinaries showImages
         | '5' -> readLetterNumbersFromBinaries()
         | '6' -> readPermutesFromBinaries()
+        | '7' -> permutesRead()
+        | '8' -> permutesShow showImages
         | _ -> printfn "X \\"
 
 

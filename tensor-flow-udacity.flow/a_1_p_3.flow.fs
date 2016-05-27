@@ -19,6 +19,24 @@ let readLetterNumbersFromBinaries1() =
 
 let readPermutesFromBinaries() =     
     let permute = (getDataPath "out/letters-bl/A.bl"),  ([0; 1; 2], [0; 3], [5; 6])
-    let bytes = readPermute permute (int (imagePixel.ConvertToByte IMAGE_LENGTH))
+    let bytes = readPermute (imagePixel.ConvertToByte IMAGE_LENGTH) permute 
     printf "%A" bytes
+    System.Console.ReadKey() |> ignore
+
+let permutesRead() =     
+    let random = new System.Random(1)
+    let rnd max = random.Next max
+    let result = permutesAndRead (getDataPath "out/letters-bl") (imagePixel.ConvertToByte IMAGE_LENGTH) rnd 10 5 5
+    printf "%A" result
+    System.Console.ReadKey() |> ignore
+
+
+let permutesShow showImages =     
+    let random = new System.Random(1)
+    let rnd max = random.Next max
+    let result = permutesAndRead (getDataPath "out/letters-bl") (imagePixel.ConvertToByte IMAGE_LENGTH) rnd 5 1 1
+    let train, test, valid = snd result.Head
+    let r = train |> List.toArray |> Array.map Seq.toArray
+    printf "%A" r
+    showImages (train |> List.toArray |> Array.map Seq.toArray) 
     System.Console.ReadKey() |> ignore

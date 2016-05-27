@@ -35,7 +35,7 @@ let ``Render train, test, by letters number`` () =
         let rnd max = random.Next max
         let numberOfLetters = [("a", 6); ("b", 7)]
         
-        let permutes = letterPermutes numberOfLetters rnd 2 2 1
+        let permutes = letterPermutes rnd 2 2 1 numberOfLetters
 
         permutes |> should equal [ ("a", ( [0; 1], [2; 3], [3]) ); ("b", ( [5; 3], [6; 2], [0]) ) ]
 
