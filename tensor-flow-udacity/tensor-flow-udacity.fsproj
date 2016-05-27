@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="measures.fs" />
+    <Compile Include="types.fs" />
     <Compile Include="utils.fs" />
     <Compile Include="a_1_p_1.fs" />
     <Compile Include="a_1_p_2.fs" />

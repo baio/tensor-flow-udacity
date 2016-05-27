@@ -20,3 +20,6 @@ let inline getGrayScale ((R: _), (G: _), (B: _)) =
     (single) (0.2126 * (float)R + 0.7152 * (float)G + 0.0722 * (float)B)
 
 let inline RGB2GrayScale (arr : _ array) = getGrayScale (arr.[0], arr.[1], arr.[2])
+
+let fileJustName (fileInfo: System.IO.FileInfo) = fileInfo.Name.Replace(fileInfo.Extension, "")
+

@@ -1,6 +1,10 @@
 ﻿module a_1_p_3
 
+open utils
 open measures
+open types
+open a_1_p_2
+
 (*
 Problem 3
 Another check: we expect the data to be balanced across classes. Verify that.
@@ -38,7 +42,7 @@ let readNumberOfLetters dirName (imageLength: int<imageByte>) =
     let getLettersNumber fileLength = (int)(fileLength / (int64)imageLength)
     
     fis.GetFiles() 
-    |> Array.map (fun fi -> fi.Name.Replace(fi.Extension, ""), (getLettersNumber fi.Length))
+    |> Array.map (fun fi -> fileJustName <| fi , (getLettersNumber fi.Length))
 
 let letterPermutes (numberOfLetters : (string * int) list) rnd trainSize testSize validSize =     
     let limits = numberOfLetters |> List.map snd
@@ -60,6 +64,32 @@ let letterPermutes (numberOfLetters : (string * int) list) rnd trainSize testSiz
     numberOfLetters 
     |> List.zip l2
     |> List.map(fun (prs, letter) -> fst letter, (setsList2Tulpe prs))
-    
+
+let readFilePosition (file: System.IO.FileStream) (fromPos: int) length = 
+    file.Seek((int64 fromPos), System.IO.SeekOrigin.Begin) |> ignore
+    let b = Array.create length (byte 0)
+    file.Read(b, 0, length) |> ignore
+    b
+
+let readFilePositions (file: System.IO.FileStream) fromPoses length =
+    fromPoses
+    |> List.map (fun pos -> readFilePosition file pos length)
+
+/// Inputs :
+/// permute string * TTVSet
+/// string - path to file
+/// TTVSet - positions to read from file for each set train, test, validation
+/// length - length of bytes to read starting from position
+/// Outputs : 
+/// tulpe with train, test, valid
+/// array of read bytes from position and of length `length`
+let readPermute (permute: TTVPermutes) length =
+    let path, sets = permute
+    let train, test, valid = sets
+    use file = new System.IO.FileStream(path, System.IO.FileMode.Open, System.IO.FileAccess.Read)
+    let trainBytes = readFilePositions file train length
+    let testBytes = readFilePositions file test length
+    let validBytes = readFilePositions file valid length
+    trainBytes, testBytes, validBytes
 
 
