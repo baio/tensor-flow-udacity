@@ -32,9 +32,9 @@ let permutesRead() =
 
 
 let permutesShow showImages =     
-    let random = new System.Random(1)
+    let random = new System.Random()
     let rnd max = random.Next max
-    let result = permutesAndRead (getDataPath "out/letters-bl") (imagePixel.ConvertToByte IMAGE_LENGTH) rnd 5 1 1
+    let result = permutesAndRead (getDataPath "out/letters-bl") (imagePixel.ConvertToByte IMAGE_LENGTH) rnd 15 15 10
     let train, test, valid = snd result.Head
     let r = train |> List.toArray |> Array.map Seq.toArray
     printf "%A" r
