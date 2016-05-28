@@ -62,6 +62,7 @@
     <Compile Include="a_1_p_1.fs" />
     <Compile Include="a_1_p_2.fs" />
     <Compile Include="a_1_p_3.fs" />
+    <Compile Include="a_1_p_4.fs" />
     <None Include="App.config" />
     <None Include="readme.md" />
     <Content Include="packages.config" />

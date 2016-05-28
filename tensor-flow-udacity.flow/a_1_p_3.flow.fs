@@ -6,6 +6,7 @@ open measures
 open utils
 open a_1_p_3
 
+
 let readLetterNumbersFromBinaries() = 
     let number = readNumberOfLetters (getDataPath "out/letters-bl")  (imagePixel.ConvertToByte IMAGE_LENGTH)
     printf "Number of letters %A" number
@@ -36,7 +37,5 @@ let permutesShow showImages =
     let rnd max = random.Next max
     let result = permutesAndRead (getDataPath "out/letters-bl") (imagePixel.ConvertToByte IMAGE_LENGTH) rnd 15 15 10
     let train, test, valid = snd result.Head
-    let r = train |> List.toArray |> Array.map Seq.toArray
-    printf "%A" r
-    showImages (train |> List.toArray |> Array.map Seq.toArray) 
+    showImages (train |> List.toArray |> Array.map (fun m -> m |> getPixels |> Seq.toArray)) 
     System.Console.ReadKey() |> ignore

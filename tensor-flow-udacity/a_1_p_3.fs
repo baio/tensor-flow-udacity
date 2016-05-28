@@ -3,7 +3,6 @@
 open utils
 open measures
 open types
-open a_1_p_2
 
 (*
 Problem 3
@@ -77,7 +76,7 @@ let readFilePosition (file: System.IO.FileStream) (fromPos: int) (length: int) =
     file.Seek((int64 fromPos * int64 length), System.IO.SeekOrigin.Begin) |> ignore
     let b = Array.create length (byte 0)
     file.Read(b, 0, length) |> ignore
-    getPixels b
+    b
 
 let readFilePositions (file: System.IO.FileStream) fromPoses length =
     fromPoses
@@ -118,6 +117,7 @@ let permutesAndRead dirName (imageLength: int<imageByte>) rnd trainSize testSize
         
     permutes
     |> List.map (fun (letter, set) -> letter, (readPermute (getPermute letter set)))
+
     
     
 
