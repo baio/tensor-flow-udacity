@@ -90,7 +90,7 @@ let readFilePositions (file: System.IO.FileStream) fromPoses length =
 /// Outputs : 
 /// tulpe with train, test, valid
 /// array of read bytes from position and of length `length`
-let readPermute (length : int<imageByte>) (permute: TTVPermutes) =
+let readPermute (length : int<imageByte>) (permute: TTVPermutes<int>) =
     let path, sets = permute
     let train, test, valid = sets
     use file = new System.IO.FileStream(path, System.IO.FileMode.Open, System.IO.FileAccess.Read)
@@ -99,7 +99,7 @@ let readPermute (length : int<imageByte>) (permute: TTVPermutes) =
     let validBytes = readFilePositions file valid (int length)
     trainBytes, testBytes, validBytes
 
-let readPermutes length (permutes: TTVPermutes list) =
+let readPermutes length (permutes: TTVPermutes<int> list) =
     permutes |> List.map (fun p -> readPermute length p)
 
 /// Create permutes for each set in directory and then read them
