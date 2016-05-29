@@ -78,15 +78,15 @@ let letterPermutes rnd trainSize testSize validSize (numberOfLetters : (string *
     |> List.zip l2
     |> List.map(fun (prs, letter) -> fst letter, (setsList2Tulpe prs))
 
-let readFilePosition (file: System.IO.FileStream) (fromPos: int) (length: int) = 
-    file.Seek((int64 fromPos * int64 length), System.IO.SeekOrigin.Begin) |> ignore
+let readFilePosition (file: System.IO.FileStream) (index: int) (length: int) = 
+    file.Seek((int64 index * int64 length), System.IO.SeekOrigin.Begin) |> ignore
     let b = Array.create length (byte 0)
     file.Read(b, 0, length) |> ignore
     b
 
-let readFilePositions (file: System.IO.FileStream) fromPoses length =
-    fromPoses
-    |> List.map (fun pos -> readFilePosition file pos length)
+let readFilePositions (file: System.IO.FileStream) indexes length =
+    indexes
+    |> List.map (fun i -> i, readFilePosition file i length)
 
 /// Inputs :
 /// permute string * TTVSet

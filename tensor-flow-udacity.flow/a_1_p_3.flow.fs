@@ -37,5 +37,5 @@ let permutesShow showImages =
     let rnd max = random.Next max
     let result = permutesAndRead (getDataPath "out/letters-bl") (imagePixel.ConvertToByte IMAGE_LENGTH) rnd 15 15 10
     let train, test, valid = snd result.Head
-    showImages (train |> List.toArray |> Array.map (fun m -> m |> getPixels |> Seq.toArray)) 
+    showImages (train |> List.toArray |> Array.map (fun m -> snd m |>  getPixels |> Seq.toArray)) 
     System.Console.ReadKey() |> ignore
