@@ -11,15 +11,20 @@ Merge and prune the training data as needed. Depending on your computer setup, y
 Also create a validation dataset for hyperparameter tuning.
 *)
 
-
 ///Generate array of items of length num with random elements from range 0..max
 ///Exclued `exclude` elements from generated array
-let rpermute rnd max num (exclude : _ list) =
+let rpermute rnd max num (exclude : _ list) =    
+    if max <= num then failwith "max couldn't be less than num"
     let mutable seen = []
+    let mutable unseen = 
+        [ for i in 0 .. max - 1 do
+            if not (List.contains i exclude) then 
+                yield i
+        ];
     while seen.Length < num do
-        let r = rnd max
-        if not (List.contains r seen) && not (List.contains r exclude) then
-            seen <- r::seen
+        let r = unseen.[rnd unseen.Length]        
+        seen <- r::seen
+        unseen <-  List.filter ((<>)r) unseen
     seen            
         
 ///trianSize testSize validSize - numbers of each letter in sets
@@ -43,6 +48,7 @@ let readNumberOfLetters dirName (imageLength: int<imageByte>) =
     
     fis.GetFiles() 
     |> Array.map (fun fi -> fileJustName <| fi , (getLettersNumber fi.Length))
+    
 
 /// Inputs :
 /// numberOfLetters - List of pairs, letter * max number of items in set
@@ -66,7 +72,7 @@ let letterPermutes rnd trainSize testSize validSize (numberOfLetters : (string *
     let l2 = List.init t.Length (fun i -> takeEveryNth t.Length l1.[i..])
     // [[t:a; tt:a, v:a]; [t:b; tt:b; v:b]]
 
-    let setsList2Tulpe (lst: 'a list) = lst.[0], lst.[1], lst.[2]
+    let setsList2Tulpe (lst: 'a list) = lst.[0], lst.[1], lst.[2]    
     
     numberOfLetters 
     |> List.zip l2
@@ -109,11 +115,12 @@ let readPermutes length (permutes: TTVPermutes<int> list) =
 /// each tulpe contains list of images
 /// images is array of bytes
 let permutesAndRead dirName (imageLength: int<imageByte>) rnd trainSize testSize validSize =
-    let perm = letterPermutes rnd trainSize testSize validSize
-    let permutes = perm <| (readNumberOfLetters dirName imageLength |> Array.toList)
     let getLetterFileName letter = sprintf "%s/%s.bl" dirName letter
-    let readPermute = readPermute imageLength
     let getPermute letter set = (getLetterFileName letter), set
+    let readPermute = readPermute imageLength
+    let perm = letterPermutes rnd trainSize testSize validSize
+
+    let permutes = perm <| (readNumberOfLetters dirName imageLength |> Array.toList)
         
     permutes
     |> List.map (fun (letter, set) -> letter, (readPermute (getPermute letter set)))

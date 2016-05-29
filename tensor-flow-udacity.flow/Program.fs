@@ -12,11 +12,13 @@ let SELECT_OPTIONS = "
     6. Permutes - Read bytes from binaries
     7. Permutes and read
     8. Permutes and show
+    9. Store permutes
 "
 
 open a_1_p_1.flow
 open a_1_p_2.flow
 open a_1_p_3.flow
+open a_1_p_4.flow
 
 let showImages = utils.showImages tensor_flow_udacity.r.utils.setPar tensor_flow_udacity.r.utils.showImage 
 
@@ -31,6 +33,7 @@ let runOption (option : System.ConsoleKeyInfo) =
         | '6' -> readPermutesFromBinaries()
         | '7' -> permutesRead()
         | '8' -> permutesShow showImages
+        | '9' -> storePermutes()
         | _ -> printfn "X \\"
 
 
@@ -41,5 +44,6 @@ let rec chooseOption _ =
     
 [<EntryPoint>]
 let main argv = 
+    //storePermutes()
     chooseOption()
     0 // return an integer exit code
