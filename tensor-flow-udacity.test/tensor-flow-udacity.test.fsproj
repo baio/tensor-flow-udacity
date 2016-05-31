@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="a_1_p_1.spec.fs" />
+    <Compile Include="a_1_p_6.spec.fs" />
     <Content Include="packages.config" />
     <Compile Include="a_1_p_3.spec.fs" />
     <Compile Include="a_1_p_5.spec.fs" />

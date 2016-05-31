@@ -64,12 +64,17 @@
     <Compile Include="a_1_p_3.fs" />
     <Compile Include="a_1_p_4.fs" />
     <Compile Include="a_1_p_5.fs" />
+    <Compile Include="a_1_p_6.fs" />
     <None Include="App.config" />
     <None Include="readme.md" />
     <Content Include="packages.config" />
     <None Include="test.fsx" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="encog-core-cs">
+      <HintPath>..\packages\encog-dotnet-core.3.3.0\lib\net35\encog-core-cs.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="FSharp.Core">
       <HintPath>..\packages\FSharp.Core.4.0.0.1\lib\net40\FSharp.Core.dll</HintPath>
       <Private>True</Private>
@@ -77,6 +82,14 @@
     <Reference Include="FSharp.Data.TypeProviders" />
     <Reference Include="Fuchu">
       <HintPath>..\packages\Fuchu.1.0.3.0\lib\Fuchu.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MathNet.Numerics">
+      <HintPath>..\packages\MathNet.Numerics.3.11.1\lib\net40\MathNet.Numerics.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MathNet.Numerics.FSharp">
+      <HintPath>..\packages\MathNet.Numerics.FSharp.3.11.1\lib\net40\MathNet.Numerics.FSharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="mscorlib" />

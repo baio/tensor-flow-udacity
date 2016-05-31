@@ -3,6 +3,8 @@
 
 module flow.main
 
+open a_1_p_6
+
 let SELECT_OPTIONS = "
     1. Show letter
     2. Show normalized letter
@@ -49,4 +51,5 @@ let rec chooseOption _ =
 let main argv = 
     //storePermutes()
     chooseOption()
+    //calcLinear()
     0 // return an integer exit code
