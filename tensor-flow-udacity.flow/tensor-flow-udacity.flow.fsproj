@@ -54,6 +54,7 @@
     <Compile Include="a_1_p_3.flow.fs" />
     <Compile Include="a_1_p_4.flow.fs" />
     <Compile Include="a_1_p_5.flow.fs" />
+    <Compile Include="a_1_p_6.flow.fs" />
     <Compile Include="Program.fs" />
     <None Include="App.config" />
   </ItemGroup>

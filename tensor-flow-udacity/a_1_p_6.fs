@@ -58,9 +58,8 @@ for numel in numel_vector:
 // Scores -> Probabilities, use softmax
 // S(Yi) = e^(Yi) / sum(e^Yi)
 
-//open Encog.ML.Data.Basic
-//open Encog.ML.Train.Strategy.End.import org.encog.ml.fitting.linear.LinearRegression;
-//import org.encog.ml.fitting.linear.TrainLinearRegression;
+open measures
+open utils
 
 open MathNet.Numerics
 
@@ -73,12 +72,38 @@ let softmax (x: float[][]) =
     
     x |> Seq.map (fun m -> m |> Seq.map (softmax' m)) 
 
- (*
-let calcLinear(x: float[][], y: float[]) = 
+let lettersToScores(letters: string[]) = 
+    
+    //let arr = [|"a"; "b"; "c"; "d"; "e"; "f"; "j"; "i"|];
 
-    let res = Fit.LinearMultiDim(x, y)
+    let getIndex letter = int letter - int "a"
+
+    letters |> Array.map getIndex 
+
+let calcLinear (x: float[][]) (y: float[]) = 
+
+    Fit.LinearMultiDim(x, y)
        
-    printf "%A" res
+    
+let readData fileName = 
+    
+    use file = new System.IO.StreamReader(new System.IO.FileStream(fileName, System.IO.FileMode.Open, System.IO.FileAccess.Read))
 
-    System.Console.ReadLine() |> ignore
-*)
+    let t = file.ReadToEnd();
+    let bytes = file.ReadToEnd().ToCharArray() |> Array.map byte;
+
+    bytes 
+    |> Seq.chunkBySize (int (imagePixel.ConvertToByte IMAGE_LENGTH))
+    |> Seq.map getPixels
+        
+let readLabels fileName = 
+    
+    use file = new System.IO.StreamReader(new System.IO.FileStream(fileName, System.IO.FileMode.Open, System.IO.FileAccess.Read))
+    file.ReadToEnd().ToCharArray() |> Seq.map System.Char.ToString;
+        
+
+
+
+
+    
+
