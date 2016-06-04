@@ -63,8 +63,52 @@ let storeSet (files: TTVFiles) (prm : TTVPermutes<int * byte array>)=
     write files.trainIndexFile trainIx
     write files.testIndexFile testIx
     write files.validIndexFile validIx
+
+let swap (a: _[]) x y =
+    let tmp = a.[x]
+    a.[x] <- a.[y]
+    a.[y] <- tmp
+
+let shuffle rnd arr =
+    arr |> Array.iteri (fun i _ -> swap arr i (rnd i arr.Length)) 
+
+type Vector = byte[]
+type SetSample = { label: string; index: int; data : Vector }
+type SetSampleTyped = 
+| TrainSample of SetSample
+| ValidSample of SetSample
+| TestSample of SetSample
+
+let flatPermute (permute: TTVPermutes<int * byte array>) = 
+    let label, tvt = permute
+    let t, v, tt = tvt
+    let mapLists lst createSampleTyped: (SetSampleTyped list) = 
+        lst |> List.map (fun (idx, bytes) -> createSampleTyped({label = label ; index = idx; data = bytes}) )
+            
+    (mapLists t (fun f -> TrainSample(f)))
+    @ (mapLists t (fun f -> ValidSample(f)))
+    @ (mapLists t (fun f -> TestSample(f)))
+       
+let flatPermutes (prms : TTVPermutes<int * byte array> list)  = 
+    prms |> List.map flatPermute |> List.concat
+
+let storeSetFlatten (files: TTVFiles) (samples : SetSampleTyped[])=
+    
+    let storeSample samplesFile labelsFile indexesFile (sample : SetSample) =
+        write samplesFile sample.data
+        write labelsFile [|sample.label|]
+        write indexesFile [|sample.index.ToString(); ";"|]
         
-let storeTTV (paths : TTVPaths) (prms : TTVPermutes<int * byte array> list)=
+    samples 
+    |> Array.iter (
+        function 
+        | TrainSample(setSample) -> storeSample files.trainFile files.trainLabelFile files.trainIndexFile setSample
+        | ValidSample(setSample) -> storeSample files.validFile files.validLabelFile files.validIndexFile setSample
+        | TestSample(setSample) -> storeSample files.testFile files.testLabelFile files.testIndexFile setSample
+    )            
+
+
+let storeTTV (paths : TTVPaths) (prms : TTVPermutes<int * byte array> list) rnd =
     
     let createFile path = new System.IO.StreamWriter(new System.IO.FileStream(path, System.IO.FileMode.Create, System.IO.FileAccess.Write))
     
@@ -79,8 +123,12 @@ let storeTTV (paths : TTVPaths) (prms : TTVPermutes<int * byte array> list)=
         testIndexFile = createFile paths.testIndex
         validIndexFile = createFile paths.validateIndex
     }        
+
+    let flattenedPermutes = flatPermutes prms |> List.toArray
+
+    shuffle rnd flattenedPermutes
             
-    prms |> List.iter (storeSet files)
+    storeSetFlatten files flattenedPermutes
 
     files.testFile.Close()
     files.trainFile.Close()
