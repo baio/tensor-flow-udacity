@@ -8,6 +8,8 @@ Create a sanitized validation and test set, and compare your accuracy on those i
 *)
 
 open types
+open measures
+open utils
 open a_1_p_4
 
 let calcOverlaps (sets: TTVSets<string * int>) = 
@@ -15,24 +17,5 @@ let calcOverlaps (sets: TTVSets<string * int>) =
     let ovp list = train.Length - (train |> (List.except list)).Length
     
     ((ovp test), (ovp valid))
-
-let readSetsLabelIndex (files: TTVPaths)  = 
-
-    let read path = 
-        use file = new System.IO.StreamReader(new System.IO.FileStream(path, System.IO.FileMode.Open, System.IO.FileAccess.Read))
-        file.ReadToEnd();
-
-    let train = (read files.trainLabel).ToCharArray() |> Array.map (sprintf "%c") |> Array.toList
-    let test = (read files.testLabel).ToCharArray() |> Array.map (sprintf "%c") |> Array.toList
-    let valid = (read files.validateLabel).ToCharArray() |> Array.map (sprintf "%c") |> Array.toList
-    let traini = (read files.trainIndex).Split([|';'|], System.StringSplitOptions.RemoveEmptyEntries) |> Array.map System.Int32.Parse |> Array.toList
-    let testi = (read files.testIndex).Split([|';'|], System.StringSplitOptions.RemoveEmptyEntries) |> Array.map System.Int32.Parse |> Array.toList
-    let validi = (read files.validateIndex).Split([|';'|], System.StringSplitOptions.RemoveEmptyEntries) |> Array.map System.Int32.Parse |> Array.toList
-        
-    let trainPair = traini |> List.zip train
-    let testPair = testi |> List.zip test
-    let validPair = validi |> List.zip valid
-    (trainPair, testPair, validPair)
-
 
     

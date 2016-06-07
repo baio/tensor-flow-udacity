@@ -72,13 +72,6 @@ let swap (a: _[]) x y =
 let shuffle rnd arr =
     arr |> Array.iteri (fun i _ -> swap arr i (rnd i arr.Length)) 
 
-type Vector = byte[]
-type SetSample = { label: string; index: int; data : Vector }
-type SetSampleTyped = 
-| TrainSample of SetSample
-| ValidSample of SetSample
-| TestSample of SetSample
-
 let flatPermute (permute: TTVPermutes<int * byte array>) = 
     let label, tvt = permute
     let t, v, tt = tvt

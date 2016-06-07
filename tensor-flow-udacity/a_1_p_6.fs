@@ -60,6 +60,8 @@ for numel in numel_vector:
 
 open measures
 open utils
+open types 
+open a_1_p_4
 
 open MathNet.Numerics
 
@@ -102,8 +104,41 @@ let readLabels fileName =
     file.ReadToEnd().ToCharArray() |> Seq.map System.Char.ToString;
         
 
+let readSetSamples (files: TTVPaths)  length : SetSample list = 
+    let imageLength = int (imagePixel.ConvertToByte IMAGE_LENGTH)
 
+    let readTrain path =         
+        let result = Array.zeroCreate (imageLength  * length)  
+        use stream = new System.IO.StreamReader(new System.IO.FileStream(path, System.IO.FileMode.Open, System.IO.FileAccess.Read))
+        stream.Read(result, 0, result.Length) |> ignore
+        result |> Array.map byte |> Seq.chunkBySize imageLength |> Seq.toList
 
-
+    let readLabels path = 
+        let result = Array.zeroCreate length
+        use stream = new System.IO.StreamReader(new System.IO.FileStream(path, System.IO.FileMode.Open, System.IO.FileAccess.Read))
+        stream.Read(result, 0, result.Length) |> ignore
+        result |> Array.map string |> Array.toList
+       
+    let readIndexes path = 
+        let result = Array.zeroCreate imageLength  
+        use stream = new System.IO.StreamReader(new System.IO.FileStream(path, System.IO.FileMode.Open, System.IO.FileAccess.Read))
+        let mutable list = []
+        let mutable current = ""
+        while list.Length < length do
+            let ii  = stream.Read()
+            let i = System.Convert.ToChar(ii).ToString()
+            if i <> ";" then
+                current <- current + i
+            else 
+                list <- List.append [System.Int32.Parse current] list
+                current <- ""
+        list
     
+    let samples = readTrain files.train            
+    let labels = readLabels files.trainLabel
+    let indexes = readIndexes files.trainIndex
+    
+    List.zip3 samples labels indexes
+    |> List.map ( fun (s, l, i) -> {label = l; index = i; data  = s})
 
+                        
