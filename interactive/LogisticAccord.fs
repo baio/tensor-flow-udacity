@@ -3,7 +3,7 @@
 open Accord.IO
 open Accord.Statistics.Models.Regression
 open Accord.Statistics.Models.Regression.Fitting
-
+open Accord.Statistics.Models.Regression.Linear
 
 type InputItem =  float[] * int 
 
@@ -17,6 +17,18 @@ let readCSV path =
     let lines = csv.ReadToEnd();
     lines |> List.ofSeq |> List.map mapCSVLine
 
+let calcAccuracy (regression : GeneralizedLinearRegression) (inputs : float[][]) (outputs : int[]) : float =    
+
+    let folder acc (input : float[]) (expectedOutput : int) = 
+        let actualProbabiltyOutput = regression.Compute(input)
+        let actualOutput = if actualProbabiltyOutput < 0.5 then 0 else 1
+        match actualOutput = expectedOutput with 
+            | true -> acc + 1.
+            | false -> acc
+
+    let correctlyClassified = Array.fold2 folder 0. inputs outputs
+    correctlyClassified / float outputs.Length
+    
 let runModel (inputsOutputs: InputItem list) = 
     let inputs, outputs = inputsOutputs |> Array.ofList |> Array.unzip    
 
@@ -37,9 +49,12 @@ let runModel (inputsOutputs: InputItem list) =
         // Perform an iteration
         delta <- teacher.Run(inputs, outputs)
 
+    let accuracy = calcAccuracy regression inputs outputs
+
+    printfn "%f" accuracy
     printfn "%A" regression.Coefficients
     printfn "%A" regression.StandardErrors
-
+   
 let TestLogisticModel path = 
     
     let inputsOutputs = readCSV path

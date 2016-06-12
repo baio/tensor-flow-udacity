@@ -6,7 +6,7 @@ open LogisticAccord
 [<EntryPoint>]
 let main argv = 
 
-    TestLogisticModel @"C:\dev\tensor-flow-udacity\data\examples\logistic_ucla.csv"
+    TestLogisticModel @"C:\dev\tensor-flow-udacity\data\examples\logistic_ucla.csv" 
 
     System.Console.ReadKey() |> ignore;
     0 // return an integer exit code
