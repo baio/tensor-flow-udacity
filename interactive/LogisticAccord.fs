@@ -1,21 +1,9 @@
 ﻿module LogisticAccord
 
-open Accord.IO
+open utils
 open Accord.Statistics.Models.Regression
 open Accord.Statistics.Models.Regression.Fitting
-open Accord.Statistics.Models.Regression.Linear
-
-type InputItem =  float[] * int 
-
-let mapCSVLine (line : string array) : InputItem = 
-    let parsed = line |> Array.map System.Double.Parse
-    parsed.[1..], int parsed.[0]
-       
-let readCSV path = 
-    use file = new System.IO.StreamReader(new System.IO.FileStream(path, System.IO.FileMode.Open))
-    let csv = new CsvReader(file, true)
-    let lines = csv.ReadToEnd();
-    lines |> List.ofSeq |> List.map mapCSVLine
+//open Accord.Statistics.Models.Regression.Linear
 
 let calcAccuracy (regression : GeneralizedLinearRegression) (inputs : float[][]) (outputs : int[]) : float =    
 
@@ -54,10 +42,10 @@ let runModel (inputsOutputs: InputItem list) =
     printfn "%f" accuracy
     printfn "%A" regression.Coefficients
     printfn "%A" regression.StandardErrors
-   
-let TestLogisticModel path = 
-    
-    let inputsOutputs = readCSV path
 
-    runModel inputsOutputs
+let testLogisticModel path mapLine = 
+    
+    let inputsOutputs = readCSV path mapLine
+
+    runModel inputsOutputs 
 
