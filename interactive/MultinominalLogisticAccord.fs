@@ -18,7 +18,7 @@ let calcAccuracy (cats : int array) (regression : MultinomialLogisticRegression)
         
         let actualOutput = cats.[maxProbabiltyCategoryIndex];
 
-        printfn "index = %i : actual = %i : expected = %i (%A)" maxProbabiltyCategoryIndex actualOutput expectedOutput actualProbabiltyOutput
+        //printfn "index = %i : actual = %i : expected = %i (%A)" maxProbabiltyCategoryIndex actualOutput expectedOutput actualProbabiltyOutput
 
         match actualOutput = expectedOutput with 
             | true -> acc + 1.
@@ -48,8 +48,9 @@ let runModel (cats : int array) (inputsOutputs: InputItem list) =
         // Perform an iteration
         delta <- lbnr.Run(inputs, outputs);
         iteration <- iteration + 1
-
-    let accuracy = calcAccuracy cats mlr (Array.take 10 inputs) (Array.take 10 outputs)
+    
+    //(Array.take 10 inputs)
+    let accuracy = calcAccuracy cats mlr inputs outputs
 
     printfn "%f" accuracy
     printfn "%A" mlr.Coefficients
