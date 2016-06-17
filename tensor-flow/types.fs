@@ -8,3 +8,7 @@ type ImageParams = {size : ImageSize; pxielDepth : int }
 type ImageInGreyScale = single [,]
 
 type LabeledImage = {label : string; image : ImageInGreyScale}
+
+type DirPath = 
+    | DirPath of string
+    | DirPathFilter of string * string

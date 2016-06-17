@@ -3,6 +3,7 @@
 open types
 open System.Drawing;
 open maybe;
+open utils;
 
 let getPixelRGB (bitmap : Bitmap) (i: int) (j: int)  = 
     let pixel = bitmap.GetPixel(i, j)
@@ -26,10 +27,10 @@ let readImage (imageSize : ImageSize) (path: string) : ImageInGreyScale option =
         |> Some
 
 
-let readImages (imageSize : ImageSize) (dirPath: string) (iamgePath2Label : string -> string) : LabeledImage seq = 
-    System.IO.Directory.EnumerateFiles(dirPath) 
-    |> Seq.choose (fun path ->         
-                
+let readImages (imageSize : ImageSize) (dirPath: DirPath) (iamgePath2Label : string -> string) : LabeledImage seq = 
+    
+    getFilePaths dirPath
+    |> Seq.choose (fun path ->                                
         //With maybe computational expression
         maybe {
             let! image = readImage imageSize path
@@ -54,3 +55,7 @@ let readImages (imageSize : ImageSize) (dirPath: string) (iamgePath2Label : stri
             | None -> None
         *)
     )    
+
+
+
+
