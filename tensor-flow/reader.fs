@@ -21,10 +21,13 @@ type ReaderBuilder() =
         | ReadExit -> 
             ReadExit
 
-     member this.Zero()  = 
+    member this.Zero()  = 
         ReadExit
 
-     member this.Return x = 
+    member this.Return x = 
+        ReadSuccess x
+
+    member this.Yield x = 
         ReadSuccess x
         
 let reader = new ReaderBuilder()                 
