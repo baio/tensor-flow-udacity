@@ -44,11 +44,16 @@ type ReaderBuilder() =
 
     member this.Combine (a, b) = 
         match (a, b) with
+        //previous some, latest exit
+        | (_, ReadExit) -> ReadExit
         // both success, take latest
         | (ReadSuccess(_), ReadSuccess(value)) -> ReadSuccess(value)
         // previous success, next error, new error with previous state
         | (ReadSuccess(value), ReadError(err, None)) -> ReadError(err, Some value)        
+        // it was an error which is bubble up now
+        | (ReadSuccess(_), ReadError(err, Some(value))) -> ReadError(err, Some value)        
         // all other cases is impossible
-        | _ -> raise(System.Exception("Unreachable code"))
+        | (a, b ) -> 
+            raise(System.Exception("Unreachable code"))
         
 let reader = new ReaderBuilder()                 

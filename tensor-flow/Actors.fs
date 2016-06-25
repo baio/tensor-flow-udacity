@@ -17,9 +17,6 @@ type InputBasket =
     | InputBasketWithInput of input : DirPath 
     | InputBasketWithInputOutput of InputOutputPaths
 
-type WorkerCommand = 
-    | StartWorker of InputOutputPaths
-
 let (|IsDirUri|_|) path = if System.IO.Directory.Exists path then Some path else None
 let (|IsFileUri|_|) path = if System.IO.File.Exists path then Some path else None
 
@@ -41,7 +38,6 @@ let parseInputDir (str: string) : ParseResult<DirPath> =
         | _ -> ParseError("Path not found")
     | _ -> ParseError("Unrecognized input")
 
-
 let parseOutputFile (str: string) : ParseResult<string> =
         
     match str with
@@ -49,41 +45,52 @@ let parseOutputFile (str: string) : ParseResult<string> =
         ParseSuccess <| DEFAULT_OUTPUT_FILE
     | name -> 
         match (string name).Trim() with
-        | IsFileUri(name) -> ParseError <| name
+        | IsFileUri(name) -> 
+            ParseSuccess name
         | _ -> ParseError("Path not found")
     
-let readConsoleInput() : ReadResult<InputBasket, InputBasket> = 
+let rec readConsoleInput(basket: InputBasket) : ReadResult<InputBasket, InputBasket> = 
     reader {        
-
-        printfn "Please enter required parameters. You always welcome type 'exit' to quit"
-        
-        printfn "In order to read images, type directory path and files extensions using comma separator (optional). Default %s (press enter)" DEFAULT_INPUT_DIR                    
-        let! dir = readConsole parseInputDir
-        let withInput = InputBasketWithInput dir
-        yield withInput
-                       
-        printfn "In order to store data, type output file name. Default %s (press enter)" DEFAULT_OUTPUT_FILE            
-        let! file = readConsole parseOutputFile 
-        yield InputBasketWithInputOutput {input = dir; output = file }
+        //store latest successful basket
+        yield basket
+        match basket with 
+        | InputBasketEmpty ->
+            printfn "Please enter required parameters. You always welcome type 'exit' to quit"        
+            printfn "In order to read images, type directory path and files extensions using comma separator (optional). Default %s (press enter)" DEFAULT_INPUT_DIR                    
+            let! dir = readConsole parseInputDir
+            yield! readConsoleInput <| InputBasketWithInput dir
+        | InputBasketWithInput dir ->                        
+            printfn "In order to store data, type output file name. Default %s (press enter)" DEFAULT_OUTPUT_FILE            
+            let! file = readConsole parseOutputFile 
+            yield! readConsoleInput <| InputBasketWithInputOutput {input = dir; output = file }
+        | InputBasketWithInputOutput _ ->
+            yield basket                        
     }
                                 
-let inputBasketActor (filePath:string) (reporter:IActorRef) (mailbox:Actor<_>) =
+let inputBasketActor (mailbox:Actor<_>) =
            
-    let rec input () = 
+    let rec input (prevIO) = 
         actor {         
             let! message = mailbox.Receive();
             match message with 
             | Start ->
                 mailbox.Self <! ReadInput
-                return! input()
+                return! input(prevIO)
             | ReadInput ->
-                match readConsoleInput() with
+                match readConsoleInput(prevIO) with
                 | ReadSuccess io -> 
-                    //select "user/workerActor" mailbox.Context.System <! StartWorker io
-                    return! input()                                    
+                    printfn "Success %A" io
+                    mailbox.Self <! Start
+                    return! input(InputBasketEmpty)                                    
+                | ReadError(err, Some(io)) ->                     
+                    printfn "Error %s ; %A" err io
+                    mailbox.Self <! ReadInput
+                    return! input(io)           
+                | ReadExit ->
+                    mailbox.Context.System.Terminate() |> ignore                                            
                 | _ ->
-                    return! input()                                    
+                    return! input prevIO                                    
         }
 
-    input()
+    input InputBasketEmpty
 
