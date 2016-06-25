@@ -5,10 +5,17 @@ type ReadResult<'a> =
     | ReadError of string
     | ReadExit
 
-let readConsole (validate: string -> ReadResult<'a>) : ReadResult<'a> = 
+type ParseResult<'a> = 
+    | ParseSuccess of 'a
+    | ParseError of string
+
+let readConsole (parse: string -> ParseResult<'a>) : ReadResult<'a> = 
     match System.Console.ReadLine() with
     | "exit" -> ReadExit
-    | str -> validate str
+    | str -> 
+        match parse str with
+        | ParseSuccess value -> ReadSuccess value
+        | ParseError err -> ReadError err
     
 type ReaderBuilder() = 
         
@@ -29,5 +36,13 @@ type ReaderBuilder() =
 
     member this.Yield x = 
         ReadSuccess x
+
+    member this.YieldFrom x = 
+        x
+            
+    member this.Delay(f) = f()
+
+    member this.Combine (a, b) = 
+        b
         
 let reader = new ReaderBuilder()                 
