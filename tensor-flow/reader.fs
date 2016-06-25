@@ -1,21 +1,21 @@
 ﻿module reader
 
-type ReadResult<'a> = 
+type ReadResult<'a, 'b> = 
     | ReadSuccess of 'a
-    | ReadError of string
+    | ReadError of string * 'b option
     | ReadExit
 
 type ParseResult<'a> = 
     | ParseSuccess of 'a
     | ParseError of string
 
-let readConsole (parse: string -> ParseResult<'a>) : ReadResult<'a> = 
+let readConsole (parse: string -> ParseResult<'a>) : ReadResult<'a, 'b> = 
     match System.Console.ReadLine() with
     | "exit" -> ReadExit
     | str -> 
         match parse str with
         | ParseSuccess value -> ReadSuccess value
-        | ParseError err -> ReadError err
+        | ParseError err -> ReadError(err, None)
     
 type ReaderBuilder() = 
         
@@ -23,8 +23,8 @@ type ReaderBuilder() =
         match m with 
         | ReadSuccess state -> 
             f state
-        | ReadError err -> 
-            ReadError err
+        | ReadError(err, state) -> 
+            ReadError(err, state)
         | ReadExit -> 
             ReadExit
 
@@ -43,6 +43,12 @@ type ReaderBuilder() =
     member this.Delay(f) = f()
 
     member this.Combine (a, b) = 
-        b
+        match (a, b) with
+        // both success, take latest
+        | (ReadSuccess(_), ReadSuccess(value)) -> ReadSuccess(value)
+        // previous success, next error, new error with previous state
+        | (ReadSuccess(value), ReadError(err, None)) -> ReadError(err, Some value)        
+        // all other cases is impossible
+        | _ -> raise(System.Exception("Unreachable code"))
         
 let reader = new ReaderBuilder()                 

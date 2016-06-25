@@ -52,7 +52,7 @@ let parseOutputFile (str: string) : ParseResult<string> =
         | IsFileUri(name) -> ParseError <| name
         | _ -> ParseError("Path not found")
     
-let readConsoleInput() : ReadResult<InputBasket> = 
+let readConsoleInput() : ReadResult<InputBasket, InputBasket> = 
     reader {        
 
         printfn "Please enter required parameters. You always welcome type 'exit' to quit"
