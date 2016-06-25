@@ -4,15 +4,12 @@ open System
 open Akka.Actor
 open Akka.FSharp
 open types
+open reader
 
 type InputCommand = 
     | Start 
     | ReadInput
    
-type Result<'a> = 
-    | Success of 'a
-    | Error of string
-
 type InputOutputPaths = {input : DirPath; output : string }
 
 type InputBasket = 
@@ -29,76 +26,61 @@ let (|IsFileUri|_|) path = if System.IO.File.Exists path then Some path else Non
 let DEFAULT_INPUT_DIR = "c:/dev/.data/tfu/in/images"
 let DEFAULT_OUTPUT_FILE  = "c:/dev/.data/tfu/out/images.data"
     
-let parseInputDir (str: string) : Result<DirPath> =
+let parseInputDir (str: string) : ReadResult<DirPath> =
         
     match str.Split([|','|]) with
     | [|name|] when String.IsNullOrEmpty(name) ->
-        Success <| DirPath DEFAULT_INPUT_DIR
+        ReadSuccess <| DirPath DEFAULT_INPUT_DIR
     | [|name|] -> 
         match (string name).Trim() with
-        | IsDirUri(name) -> Success <| DirPath name
-        | _ -> Error("Path not found")
+        | IsDirUri(name) -> ReadSuccess <| DirPath name
+        | _ -> ReadError("Path not found")
     | [|name; ext|] ->
         match (string name).Trim() with
-        | IsDirUri(name) ->  Success <| DirPathFilter (name, ext.Trim())
-        | _ -> Error "Path not found"
-    | _ -> Error "Unrecognized input"
+        | IsDirUri(name) ->  ReadSuccess <| DirPathFilter (name, ext.Trim())
+        | _ -> ReadError("Path not found")
+    | _ -> ReadError("Unrecognized input")
 
 
-let parseOutputFile (str: string) : Result<string> =
+let parseOutputFile (str: string) : ReadResult<string> =
         
     match str with
     | name when String.IsNullOrEmpty(name) ->
-        Success <| DEFAULT_OUTPUT_FILE
+        ReadSuccess <| DEFAULT_OUTPUT_FILE
     | name -> 
         match (string name).Trim() with
-        | IsFileUri(name) -> Success <| name
-        | _ -> Error("Path not found")
+        | IsFileUri(name) -> ReadError <| name
+        | _ -> ReadError("Path not found")
     
-                            
-let inputBasketActor (filePath:string) (reporter:IActorRef) (mailbox:Actor<_>) =
-        
-    let getInput parser =
-        let line = Console.ReadLine()
-        match line.ToLower() with
-        | "exit" ->
-             mailbox.Context.System.Terminate() |> ignore
-             ""
-        | line -> line
-
-    let rec readInput basket = 
+let rec readConsoleInput basket : ReadResult<InputBasket> = 
+    reader {    
         match basket with
         | InputBasketEmpty ->
-            printfn "In order to read images, type directory path and files extensions using comma separator (optional). Default %s (press enter)" DEFAULT_INPUT_DIR
-            match parseInputDir <| getInput() with
-                | Success dir -> 
-                    readInput <| InputBasketWithInput dir
-                | Error msg ->
-                    //TODO
-                    readInput basket
+            printfn "Please enter required parameters. You always welcome type 'exit' to quit"
+            printfn "In order to read images, type directory path and files extensions using comma separator (optional). Default %s (press enter)" DEFAULT_INPUT_DIR            
+            let! dir = readConsole parseInputDir
+            return InputBasketWithInput dir
         | InputBasketWithInput dir ->
-            printfn "In order to store data, type output file name. Default %s (press enter)" DEFAULT_OUTPUT_FILE
-            match parseOutputFile <| getInput() with
-                | Success file -> 
-                    InputBasketWithInputOutput {input = dir; output = file}
-                | Error msg ->
-                    //TODO
-                    readInput basket
+            printfn "In order to store data, type output file name. Default %s (press enter)" DEFAULT_OUTPUT_FILE    
+            let! file = readConsole parseOutputFile 
+            return InputBasketWithInputOutput {input = dir; output = file }
         | InputBasketWithInputOutput _ -> raise(Exception("Unreachable code"))
+    }
+                                
+let inputBasketActor (filePath:string) (reporter:IActorRef) (mailbox:Actor<_>) =
 
-
+           
     let rec input () = 
         actor {         
             let! message = mailbox.Receive();
             match message with 
             | Start ->
-                printfn "Please enter required parameters. You always welcome type 'exit' to quit"
                 mailbox.Self <! ReadInput
                 return! input()
             | ReadInput ->
-                match readInput InputBasketEmpty with
-                | InputBasketWithInputOutput io -> 
-                    select "user/workerActor" mailbox.Context.System <! StartWorker io
+                match readConsoleInput InputBasketEmpty with
+                | ReadSuccess io -> 
+                    //select "user/workerActor" mailbox.Context.System <! StartWorker io
                     return! input()                                    
                 | _ ->
                     return! input()                                    
