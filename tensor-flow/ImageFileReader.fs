@@ -5,12 +5,19 @@ open System.Drawing;
 open maybe;
 open utils;
 
+let flat2dArray (arr : 'a[,]) : 'a[]=
+    //2d array -> array of arrays
+    Array.init ( arr.GetLength(1) ) (fun i -> arr.[*, i])  
+    //flat array of arrays
+    |> Array.collect (fun f -> f) 
+
 let getPixelRGB (bitmap : Bitmap) (i: int) (j: int)  = 
     let pixel = bitmap.GetPixel(i, j)
     pixel.R, pixel.G, pixel.B    
 
 let getPixelGrey (bitmap : Bitmap) (i: int) (j: int)  = 
     //http://stackoverflow.com/questions/687261/converting-rgb-to-grayscale-intensity
+    // B & W 
     let r, g, b = getPixelRGB bitmap i j
     (single) (0.2126 * (float)r + 0.7152 * (float)g + 0.0722 * (float)b)
   
@@ -25,7 +32,6 @@ let readImage (imageSize : ImageSize) (path: string) : ImageInGreyScale option =
         Array2D.zeroCreate<int> imageSize.width imageSize.height 
         |> Array2D.mapi (fun i j _ -> getPixelGrey bitmap i j)
         |> Some
-
 
 let readImages (imageSize : ImageSize) (dirPath: DirPath) (iamgePath2Label : string -> string) : LabeledImage seq = 
     

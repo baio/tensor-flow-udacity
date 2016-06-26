@@ -60,9 +60,12 @@
     <Compile Include="measures.fs" />
     <Compile Include="types.fs" />
     <Compile Include="utils.fs" />
-    <Compile Include="Actors.fs" />
-    <Compile Include="CsvFileReader.fs" />
     <Compile Include="ImageFileReader.fs" />
+    <Compile Include="ReporterActor.fs" />
+    <Compile Include="WriterActor.fs" />
+    <Compile Include="ReaderActor.fs" />
+    <Compile Include="IORouterActor.fs" />
+    <Compile Include="InputActor.fs" />
     <Compile Include="Program.fs" />
     <None Include="App.config" />
     <Content Include="packages.config" />

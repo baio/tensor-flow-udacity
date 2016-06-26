@@ -10,7 +10,6 @@ type InputCommand =
     | Start 
     | ReadInput
    
-type InputOutputPaths = {input : DirPath; output : string }
 
 type InputBasket = 
     | InputBasketEmpty
@@ -20,8 +19,9 @@ type InputBasket =
 let (|IsDirUri|_|) path = if System.IO.Directory.Exists path then Some path else None
 let (|IsFileUri|_|) path = if System.IO.File.Exists path then Some path else None
 
-let DEFAULT_INPUT_DIR = "c:/dev/.data/tfu/in/images"
-let DEFAULT_OUTPUT_FILE  = "c:/dev/.data/tfu/out/images.data"
+let DEFAULT_INPUT_DIR = "C:\dev\.data\notMNIST_small"
+let DEFAULT_INPUT_EXT = "png"
+let DEFAULT_OUTPUT_FILE  = "C:\dev\.data\notMNIST_normalized.csv"
     
 let parseInputDir (str: string) : ParseResult<DirPath> =
         
@@ -56,7 +56,7 @@ let rec readConsoleInput(basket: InputBasket) : ReadResult<InputBasket, InputBas
         match basket with 
         | InputBasketEmpty ->
             printfn "Please enter required parameters. You always welcome type 'exit' to quit"        
-            printfn "In order to read images, type directory path and files extensions using comma separator (optional). Default %s (press enter)" DEFAULT_INPUT_DIR                    
+            printfn "In order to read images, type directory path and files extensions using comma separator (optional). Default %s (press enter), .%s" DEFAULT_INPUT_DIR  DEFAULT_INPUT_EXT
             let! dir = readConsole parseInputDir
             yield! readConsoleInput <| InputBasketWithInput dir
         | InputBasketWithInput dir ->                        

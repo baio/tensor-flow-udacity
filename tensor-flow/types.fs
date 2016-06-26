@@ -12,3 +12,7 @@ type LabeledImage = {label : string; image : ImageInGreyScale}
 type DirPath = 
     | DirPath of string
     | DirPathFilter of string * string
+
+
+type InputOutputPaths = {input : DirPath; output : string}
+    

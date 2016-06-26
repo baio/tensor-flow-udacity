@@ -7,6 +7,8 @@ type MaybeBuilder() =
     member this.Return(x) = Some x
 
     member this.ReturnFrom(x) = x
+
+    member this.Zero() = None
     
 
 let maybe = new MaybeBuilder()
