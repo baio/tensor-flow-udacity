@@ -19,9 +19,9 @@ type InputBasket =
 let (|IsDirUri|_|) path = if System.IO.Directory.Exists path then Some path else None
 let (|IsFileUri|_|) path = if System.IO.File.Exists path then Some path else None
 
-let DEFAULT_INPUT_DIR = "C:\dev\.data\notMNIST_small"
+let DEFAULT_INPUT_DIR = @"C:\dev\.data\notMNIST_small"
 let DEFAULT_INPUT_EXT = "png"
-let DEFAULT_OUTPUT_FILE  = "C:\dev\.data\notMNIST_normalized.csv"
+let DEFAULT_OUTPUT_FILE  = @"C:\dev\.data\notMNIST_normalized.csv"
     
 let parseInputDir (str: string) : ParseResult<DirPath> =
         

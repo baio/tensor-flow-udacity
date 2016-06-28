@@ -24,14 +24,17 @@ let getPixelGrey (bitmap : Bitmap) (i: int) (j: int)  =
 // Read iamge and return greyscaled pixels
 let readImage (imageSize : ImageSize) (path: string) : ImageInGreyScale option = 
     
-    let bitmap = new Bitmap(path)
+    try
+        let bitmap = new Bitmap(path)
      
-    if imageSize <> { width = bitmap.Size.Width; height = bitmap.Size.Height}  then 
-        None
-    else 
-        Array2D.zeroCreate<int> imageSize.width imageSize.height 
-        |> Array2D.mapi (fun i j _ -> getPixelGrey bitmap i j)
-        |> Some
+        if imageSize <> { width = bitmap.Size.Width; height = bitmap.Size.Height}  then 
+            None
+        else 
+            Array2D.zeroCreate<int> imageSize.width imageSize.height 
+            |> Array2D.mapi (fun i j _ -> getPixelGrey bitmap i j)
+            |> Some
+    with 
+    | _ -> None
 
 let readImages (imageSize : ImageSize) (dirPath: DirPath) (iamgePath2Label : string -> string) : LabeledImage seq = 
     
