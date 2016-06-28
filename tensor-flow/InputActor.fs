@@ -1,4 +1,4 @@
-﻿module Actors
+﻿module InputActor
 
 open System
 open Akka.Actor
@@ -67,7 +67,7 @@ let rec readConsoleInput(basket: InputBasket) : ReadResult<InputBasket, InputBas
             yield basket                        
     }
                                 
-let inputBasketActor (mailbox:Actor<_>) =
+let inputBasketActor (routerActor : IActorRef) (mailbox:Actor<_>) =
            
     let rec input (prevIO) = 
         actor {         
@@ -79,9 +79,13 @@ let inputBasketActor (mailbox:Actor<_>) =
             | ReadInput ->
                 match readConsoleInput(prevIO) with
                 | ReadSuccess io -> 
-                    printfn "Success %A" io
-                    mailbox.Self <! Start
-                    return! input(InputBasketEmpty)                                    
+                    match io with 
+                    | InputBasketWithInputOutput paths ->
+                        printfn "Success %A" paths
+                        routerActor <! IORouterActor.IORouterStart paths
+                    |_ ->
+                        printfn "Thats strange"
+                        return! input(InputBasketEmpty)                                    
                 | ReadError(err, Some(io)) ->                     
                     printfn "Error %s ; %A" err io
                     mailbox.Self <! ReadInput

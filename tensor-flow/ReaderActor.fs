@@ -48,6 +48,7 @@ let FileReaderActor (writer: IActorRef) (mailbox: Actor<ReaderMessage>) =
     reader()
 
 let BatchReaderActor (writer: IActorRef) (mailbox: Actor<ReaderMessage>) = 
+    mailbox.Defer (fun () -> mailbox.Sender() <! ReaderBatchReadComplete)
     let rec reader() = 
         actor {
             
@@ -62,7 +63,6 @@ let BatchReaderActor (writer: IActorRef) (mailbox: Actor<ReaderMessage>) =
                     let task = fileReader <? ReaderFileRead path              
                     Async.RunSynchronously task
                 )
-                mailbox.Sender() <! ReaderBatchReadComplete
             | _ ->
                 //stop
                 return! reader()

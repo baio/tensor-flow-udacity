@@ -4,15 +4,14 @@ open Akka.FSharp
 open Akka.FSharp.Spawn
 open Akka.Actor
 
-open Actors
-
 [<EntryPoint>]
 let main argv = 
-     
-    let myActorSystem = System.create "MyActorSystem" (Configuration.load ())
-    let inputActor = spawn myActorSystem "inputActor" (Actors.inputBasketActor)
+    
+    let myActorSystem = System.create "MyActorSystem" (Configuration.load ())    
+    let ioActor = spawn myActorSystem "ioActor" (IORouterActor.IORouterActor)
+    let inputActor = spawn myActorSystem "inputActor" (InputActor.inputBasketActor ioActor)
 
-    inputActor <! InputCommand.Start
+    inputActor <! InputActor.InputCommand.Start
     
     myActorSystem.WhenTerminated.Wait()
 

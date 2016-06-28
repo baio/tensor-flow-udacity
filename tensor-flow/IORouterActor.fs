@@ -1,4 +1,4 @@
-﻿module ReaderActorCoordinator
+﻿module IORouterActor
 
 //Create single writer actor and bunch of readers
 //While read could be done in parallel mapped outputs will be sync via single writer.
@@ -16,21 +16,24 @@ open reader
 open WriterActor
 open ReaderActor
 
-let IORouterActor (mailbox: Actor<InputOutputPaths>) = 
+type IORouterMessages = 
+    | IORouterStart of InputOutputPaths
+
+let IORouterActor (mailbox: Actor<IORouterMessages>) = 
     
     let rec router() = 
         actor {
-    
+            
             let! msg = mailbox.Receive()
 
-            let writer = spawn mailbox "writerActor" WriterActor
-            let reader = spawn mailbox "readerActor" (ReaderActor writer)
+            match msg with 
+            | IORouterStart paths ->
+                let writer = spawn mailbox "writerActor" WriterActor
+                let reader = spawn mailbox "readerActor" (ReaderActor writer)
 
-            writer <! WriterStart msg.output
-            reader <! ReaderStart msg.input
-
-            return! router()
+                writer <! WriterStart paths.output
+                reader <! ReaderStart paths.input
         }
-
+        
     router()
     
