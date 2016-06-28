@@ -30,24 +30,23 @@ let FileReaderActor (writer: IActorRef) (mailbox: Actor<ReaderMessage>) =
         actor {
     
             let! msg = mailbox.Receive()
-            let sender = mailbox.Sender()
+            let parent = mailbox.Context.Parent
 
             match msg with 
             | ReaderFileRead path -> 
-                match (readImage {width = 28; height = 28} path) with                   
-                    | Some image ->
-                        let bytes = flat2dArray image
-                                        |> Array.map string
-                                        |> System.String.Concat                    
-                        writer <! WriterWrite ((mapPath2Label path) + bytes)
-                        sender <! ReaderFileReadComplete
-                    | None ->
-                        sender <! ReaderFileReadComplete
+                maybe {
+                    let! image = readImage {width = 28; height = 28} path
+                    let bytes = flat2dArray image
+                                    |> Array.map string
+                                    |> System.String.Concat                    
+                    writer <! WriterWrite ((mapPath2Label path) + bytes)
+                } |> ignore
+                parent <! ReaderFileReadComplete
                 return! reader()
             | _ -> 
                 return! reader()
 
-            sender <! ReaderFileReadComplete
+            parent <! ReaderFileReadComplete
             return! reader()                
         }
 
@@ -65,19 +64,34 @@ let BatchReaderActor (writer: IActorRef) (mailbox: Actor<ReaderMessage>) =
 
             match message with
             | ReaderFileReadComplete ->
-                printfn "cool"
+                mailbox.Stash()
             | ReaderBatchRead paths ->                
                 let fileReader = spawn mailbox (sprintf "fileReaderActor_%s"  mailbox.Self.Path.Name) (FileReaderActor writer)
-
                 paths |> Array.iter (fun path ->                    
                     async {
                         do! fileReader <? (ReaderFileRead path)
                     } |!> mailbox.Self
                 )
-                return! reader()
+                mailbox.UnstashAll()
+                return! waitComplete(paths.Length)
             | _ ->
-                //stop
                 return! reader()
+        }
+    and waitComplete(waitForCnt) =
+        
+        actor {
+                    
+            let! message = mailbox.Receive()
+            
+            match message with
+            | ReaderFileReadComplete ->
+                if waitForCnt - 1 > 0 then                    
+                    return! waitComplete(waitForCnt - 1)
+                else 
+                    mailbox.Context.Parent <! ReaderBatchReadComplete
+            | _ -> 
+                return! waitComplete(waitForCnt)
+                
         }
 
     reader()
@@ -116,8 +130,9 @@ let ReaderActor (writer: IActorRef) (mailbox: Actor<ReaderMessage>)  =
             let! message = mailbox.Receive()
             //TODO catch errors in supervisions
             match message with
-            | ReaderBatchReadComplete ->
+            | ReaderBatchReadComplete ->                
                 let notCompletedBatches = batchesCount - 1
+                printfn "Stop batch reader (left %i)" notCompletedBatches
                 if notCompletedBatches > 0 then
                     return! waitComplete(notCompletedBatches)
                 else 

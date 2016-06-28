@@ -44,6 +44,7 @@ let WriterActor (mailbox: Actor<WriterMessage>) =
                     raise(Exception("Output file is not initialized"))
                 else
                     streamWriter.Write line
+                    streamWriter.Write "\n"
                 return! writer()
             | WriterStop ->
                 close()
