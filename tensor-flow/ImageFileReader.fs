@@ -5,6 +5,7 @@ open System.Drawing;
 open maybe;
 open utils;
 
+
 let flat2dArray (arr : 'a[,]) : 'a[]=
     //2d array -> array of arrays
     Array.init ( arr.GetLength(1) ) (fun i -> arr.[*, i])  
@@ -15,14 +16,22 @@ let getPixelRGB (bitmap : Bitmap) (i: int) (j: int)  =
     let pixel = bitmap.GetPixel(i, j)
     pixel.R, pixel.G, pixel.B    
 
+
 let getPixelGrey (bitmap : Bitmap) (i: int) (j: int)  = 
     //http://stackoverflow.com/questions/687261/converting-rgb-to-grayscale-intensity
     // B & W 
     let r, g, b = getPixelRGB bitmap i j
     (single) (0.2126 * (float)r + 0.7152 * (float)g + 0.0722 * (float)b)
+
+let getPixelBW (bitmap : Bitmap) (i: int) (j: int) = 
+    let grey = getPixelGrey bitmap i j
+    if grey < single 200 then
+        byte 0
+    else
+        byte 1
   
 // Read iamge and return greyscaled pixels
-let readImage (imageSize : ImageSize) (path: string) : ImageInGreyScale option = 
+let readImage (imageSize : ImageSize) (path: string) : ImageInBW option = 
     
     try
         let bitmap = new Bitmap(path)
@@ -31,7 +40,7 @@ let readImage (imageSize : ImageSize) (path: string) : ImageInGreyScale option =
             None
         else 
             Array2D.zeroCreate<int> imageSize.width imageSize.height 
-            |> Array2D.mapi (fun i j _ -> getPixelGrey bitmap i j)
+            |> Array2D.mapi (fun i j _ -> getPixelBW bitmap i j)
             |> Some
     with 
     | _ -> None
