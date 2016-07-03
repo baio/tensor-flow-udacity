@@ -10,6 +10,10 @@ open maybe
 open WriterActor
 
 let INPUT_FILES_BATCH_SIZE = 1000
+// TODO 
+// separate WaitComplete actor
+// supervision strategy - stop for file reader, continue for batch reader
+
 
 type ReaderMessage =
     // labels + files to read
