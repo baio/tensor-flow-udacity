@@ -14,9 +14,3 @@ let getFilePaths (dirPath: DirPath) : string [] =
             | DirPathFilter(path, filter) -> path, filter
         
     System.IO.Directory.GetFiles(path, filter, System.IO.SearchOption.AllDirectories)
-
-
-
-
-
-
