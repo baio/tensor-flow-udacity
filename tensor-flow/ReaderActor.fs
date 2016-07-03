@@ -9,7 +9,7 @@ open ImageFileReader
 open maybe
 open WriterActor
 
-let INPUT_FILES_BATCH_SIZE = 1000
+let INPUT_FILES_BATCH_SIZE = 5000
 // TODO 
 // separate WaitComplete actor
 // supervision strategy - stop for file reader, continue for batch reader

@@ -9,7 +9,7 @@ open ShowImages
 [<EntryPoint>]
 let main argv = 
     
-    (*
+    
     let myActorSystem = System.create "MyActorSystem" (Configuration.load ())    
     let ioActor = spawn myActorSystem "ioActor" (IORouterActor.IORouterActor)
     let inputActor = spawn myActorSystem "inputActor" (InputActor.inputBasketActor ioActor)
@@ -17,7 +17,7 @@ let main argv =
     inputActor <! InputActor.InputCommand.Start
     
     myActorSystem.WhenTerminated.Wait()
-    *)
+    
 
     showImages 36 @"C:\dev\.data\notMNIST_normalized.csv"
 

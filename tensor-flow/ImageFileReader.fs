@@ -25,7 +25,7 @@ let getPixelGrey (bitmap : Bitmap) (i: int) (j: int)  =
 
 let getPixelBW (bitmap : Bitmap) (i: int) (j: int) = 
     let grey = getPixelGrey bitmap i j
-    if grey < single 200 then
+    if grey < single 10 then
         byte 0
     else
         byte 1
