@@ -48,6 +48,7 @@ let WriterActor (mailbox: Actor<WriterMessage>) =
                 return! writer()
             | WriterStop ->
                 close()
+                mailbox.Context.System.Terminate() |> ignore                                            
         }
 
     writer()
