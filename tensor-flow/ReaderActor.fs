@@ -13,7 +13,7 @@ let INPUT_FILES_BATCH_SIZE = 1000
 // TODO 
 // separate WaitComplete actor
 // supervision strategy - stop for file reader, continue for batch reader
-
+// use pickler to pass messages data to writer
 
 type ReaderMessage =
     // labels + files to read

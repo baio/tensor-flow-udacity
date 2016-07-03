@@ -51,7 +51,7 @@
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="PointChart.fs" />
+    <Compile Include="Image.fs" />
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

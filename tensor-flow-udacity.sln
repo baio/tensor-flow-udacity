@@ -19,7 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		data\examples\multi.csv = data\examples\multi.csv
 	EndProjectSection
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "tensor-flow", "tensor-flow\tensor-flow.fsproj", "{AD15A432-5F5C-40C1-A9D9-A1FE5A529516}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "tensor-flow-read-images", "tensor-flow\tensor-flow-read-images.fsproj", "{AD15A432-5F5C-40C1-A9D9-A1FE5A529516}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "charts", "charts\charts.fsproj", "{2E680BE2-C935-48B4-BBEE-FC3FF8306673}"
 EndProject

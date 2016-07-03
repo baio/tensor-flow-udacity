@@ -8,11 +8,11 @@
     <ProjectGuid>ad15a432-5f5c-40c1-a9d9-a1fe5a529516</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>tensor_flow</RootNamespace>
-    <AssemblyName>tensor_flow</AssemblyName>
+    <AssemblyName>tensor_flow_read_images</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFSharpCoreVersion>4.4.0.0</TargetFSharpCoreVersion>
-    <Name>tensor-flow</Name>
+    <Name>tensor-flow-read-images</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -60,6 +60,7 @@
     <Compile Include="measures.fs" />
     <Compile Include="types.fs" />
     <Compile Include="utils.fs" />
+    <Compile Include="ShowImages.fs" />
     <Compile Include="ImageFileReader.fs" />
     <Compile Include="ReporterActor.fs" />
     <Compile Include="WriterActor.fs" />
