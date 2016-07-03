@@ -25,13 +25,12 @@ type ReaderMessage =
     // stop read
     | ReaderStop
 
-let getLetterLabel (letter: char) =
+let getLetterNumber (letter: char) =      
     byte <| int letter - 97
 
 let mapPath2Label (path: string) = 
-     (new System.IO.FileInfo(path)).Directory.Name.ToLower().[0] 
-     |> getLetterLabel
-     |> string
+  (new System.IO.FileInfo(path)).Directory.Name.ToLower().[0]
+  |> getLetterNumber
 
 let FileReaderActor (writer: IActorRef) (mailbox: Actor<ReaderMessage>) = 
                
@@ -46,9 +45,7 @@ let FileReaderActor (writer: IActorRef) (mailbox: Actor<ReaderMessage>) =
                 maybe {
                     let! image = readImage {width = 28; height = 28} path
                     let bytes = flat2dArray image
-                                    |> Array.map string
-                                    |> System.String.Concat                    
-                    writer <! WriterWrite ((mapPath2Label path) + bytes)
+                    writer <! WriterWrite (mapPath2Label path, bytes)
                 } |> ignore
                 parent <! ReaderFileReadComplete
                 return! reader()
