@@ -25,8 +25,13 @@ type ReaderMessage =
     // stop read
     | ReaderStop
 
+let getLetterLabel (letter: char) =
+    byte <| int letter - 97
+
 let mapPath2Label (path: string) = 
-     (new System.IO.FileInfo(path)).Directory.Name
+     (new System.IO.FileInfo(path)).Directory.Name.ToLower().[0] 
+     |> getLetterLabel
+     |> string
 
 let FileReaderActor (writer: IActorRef) (mailbox: Actor<ReaderMessage>) = 
                
