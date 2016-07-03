@@ -12,15 +12,15 @@ open Nessos.FsPickler
 type WriterMessage =
     // path of file
     | WriterStart of string
-    // line to write
-    | WriterWrite of byte array
+    // label + line to write
+    | WriterWrite of byte * byte array
     // stop to write
     | WriterStop
 
 let WriterActor (mailbox: Actor<WriterMessage>) = 
 
     let binarySerializer = FsPickler.CreateBinary()
-    let mutable streamWriter : System.IO.Stream = null;
+    let mutable streamWriter : System.IO.StreamWriter = null;
 
     let close () =  
         if streamWriter <> null then
@@ -40,17 +40,17 @@ let WriterActor (mailbox: Actor<WriterMessage>) =
                 if streamWriter <> null then
                     raise(Exception("Output file access error"))
                 else
-                    streamWriter <- new System.IO.FileStream(path, System.IO.FileMode.Create, System.IO.FileAccess.Write)
+                    streamWriter <- new System.IO.StreamWriter(new System.IO.FileStream(path, System.IO.FileMode.Create, System.IO.FileAccess.Write))
                 return! writer()
-            | WriterWrite line ->
+            | WriterWrite (label, inputs) ->
                 if streamWriter = null then
                     raise(Exception("Output file is not initialized"))
                 else
-                    binarySerializer.Serialize(streamWriter, line, leaveOpen = true)
-                    (*
+                    //binarySerializer.Serialize(streamWriter, inputs, leaveOpen = true)
+                    let line = sprintf "%i%s" label (String.concat "" (inputs |> Array.map string))
                     streamWriter.Write line
                     streamWriter.Write "\n"
-                    *)
+                    
                 return! writer()
             | WriterStop ->
                 close()

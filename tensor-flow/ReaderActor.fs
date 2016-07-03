@@ -45,7 +45,7 @@ let FileReaderActor (writer: IActorRef) (mailbox: Actor<ReaderMessage>) =
                 maybe {
                     let! image = readImage {width = 28; height = 28} path
                     let bytes = flat2dArray image
-                    writer <! WriterWrite ( Array.concat [[|mapPath2Label path|]; bytes] )
+                    writer <! WriterWrite (mapPath2Label path, bytes)
                 } |> ignore
                 parent <! ReaderFileReadComplete
                 return! reader()
