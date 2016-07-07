@@ -82,7 +82,7 @@ let inputBasketActor (routerActor : IActorRef) (mailbox:Actor<_>) =
                     match io with 
                     | InputBasketWithInputOutput paths ->
                         printfn "Success %A" paths
-                        routerActor <! IORouterActor.IORouterStart paths
+                        routerActor <! IORouterStart paths
                     |_ ->
                         printfn "Thats strange"
                         return! input(InputBasketEmpty)                                    

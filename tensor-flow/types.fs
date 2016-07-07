@@ -16,4 +16,10 @@ type DirPath =
 
 
 type InputOutputPaths = {input : DirPath; output : string}
+
+type IORouterMessages = 
+    | IORouterStart of InputOutputPaths
+    | IORouterWriteComplete
+
     
+

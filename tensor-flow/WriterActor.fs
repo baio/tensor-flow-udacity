@@ -17,7 +17,7 @@ type WriterMessage =
     // stop to write
     | WriterStop
 
-let WriterActor (mailbox: Actor<WriterMessage>) = 
+let WriterActor (ioRouter: IActorRef) (mailbox: Actor<WriterMessage>) = 
 
     let binarySerializer = FsPickler.CreateBinary()
     let mutable streamWriter : System.IO.StreamWriter = null;
@@ -50,11 +50,10 @@ let WriterActor (mailbox: Actor<WriterMessage>) =
                     let line = sprintf "%i%s" label (String.concat "" (inputs |> Array.map string))
                     streamWriter.Write line
                     streamWriter.Write "\n"
-                    
+                    ioRouter <! IORouterWriteComplete
                 return! writer()
             | WriterStop ->
                 close()
-                printfn "CLOSE !"
                 mailbox.Context.System.Terminate() |> ignore                                            
         }
 
