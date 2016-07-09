@@ -1,4 +1,4 @@
-﻿module image
+﻿module ML.Charts.R.Image
 
 open RProvider
 open RProvider.graphics

@@ -1,12 +1,10 @@
-﻿module WriterActor
+﻿module ML.Actors.Image.WriterActor
 
 
 open System
 open Akka.Actor
 open Akka.FSharp
-open types
-
-open Nessos.FsPickler
+open ML.Actors.Types
 
 type WriterMessage =
     // path of file
@@ -19,8 +17,8 @@ type WriterMessage =
 
 let WriterActor (ioRouter: IActorRef) (mailbox: Actor<WriterMessage>) = 
 
-    let binarySerializer = FsPickler.CreateBinary()
     let mutable streamWriter : System.IO.StreamWriter = null;
+    let mutable streamPath = null;
 
     let close () =  
         if streamWriter <> null then
@@ -40,6 +38,7 @@ let WriterActor (ioRouter: IActorRef) (mailbox: Actor<WriterMessage>) =
                 if streamWriter <> null then
                     raise(Exception("Output file access error"))
                 else
+                    streamPath <- path
                     streamWriter <- new System.IO.StreamWriter(new System.IO.FileStream(path, System.IO.FileMode.Create, System.IO.FileAccess.Write))
                 return! writer()
             | WriterWrite (label, inputs) ->
@@ -49,11 +48,11 @@ let WriterActor (ioRouter: IActorRef) (mailbox: Actor<WriterMessage>) =
                     streamWriter.Write label
                     inputs |> Array.iter streamWriter.Write
                     streamWriter.Write "\n"
-                    ioRouter <! IORouterWriteComplete
+                    ioRouter <! RWFileComplete
                 return! writer()
             | WriterStop ->
                 close()
-                ioRouter <! IORouterWriterClosed
+                ioRouter <! RWClosed streamPath
         }
 
     writer()

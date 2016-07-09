@@ -14,7 +14,8 @@ let main argv =
 
     let logger = (new LoggerConfiguration()).WriteTo.Seq("http://localhost:5341").MinimumLevel.Debug().CreateLogger()
     Serilog.Log.Logger <- logger
-        
+    
+    (*        
     let myActorSystem = System.create "Images2DataSetActorSystem" (Configuration.load ())    
     let ioActor = spawn myActorSystem "ReadWriteCoordinator" (IORouterActor.IORouterActor)
     let inputActor = spawn myActorSystem "Input" (InputActor.inputBasketActor ioActor)
@@ -22,6 +23,7 @@ let main argv =
     inputActor <! InputActor.InputCommand.Start
     
     myActorSystem.WhenTerminated.Wait()
+    *)
 
     System.Console.ReadKey() |> ignore
     

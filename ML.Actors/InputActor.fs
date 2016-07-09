@@ -1,10 +1,10 @@
-﻿module InputActor
+﻿module ML.Actors.InputActor
 
 open System
 open Akka.Actor
 open Akka.FSharp
 
-open types
+open Types
 open DataProccessing.Reader
 open DataProccessing.Types
 
@@ -69,7 +69,7 @@ let rec readConsoleInput(basket: InputBasket) : ReadResult<InputBasket, InputBas
             yield basket                        
     }
                                 
-let inputBasketActor (routerActor : IActorRef) (mailbox:Actor<_>) =
+let InputActor (routerActor : IActorRef) (mailbox:Actor<InputCommand>) =
            
     let rec input (prevIO) = 
         actor {         
@@ -84,7 +84,7 @@ let inputBasketActor (routerActor : IActorRef) (mailbox:Actor<_>) =
                     match io with 
                     | InputBasketWithInputOutput paths ->
                         logInfo mailbox <| sprintf "Input success %A" paths
-                        routerActor <! IORouterStart paths
+                        routerActor <! RWStart paths
                     |_ ->
                         logWarning mailbox "Thats strange" 
                         return! input(InputBasketEmpty)                                    

@@ -1,20 +1,13 @@
-﻿module ReaderActor
+﻿module ML.Actors.Image.ReaderActor
 
 open System
 open Akka.Actor
 open Akka.FSharp
-open types
+open ML.Actors.Types
 open WriterActor
 
 open DataProccessing.Types
 open DataProccessing.ImageFileReader
-open DataProccessing.Maybe
-
-let INPUT_FILES_BATCH_SIZE = 5000
-// TODO 
-// separate WaitComplete actor
-// supervision strategy - stop for file reader, continue for batch reader
-// use pickler to pass messages data to writer
 
 type ReaderMessage =
     // labels + files to read
@@ -46,7 +39,7 @@ let FileReaderActor (ioRouter: IActorRef) (writer: IActorRef) (mailbox: Actor<Re
                     writer <! WriterWrite (mapPath2Label path, bytes)
                 | None ->
                     logErrorf mailbox "File read error %A" path
-                    ioRouter <! IORouterWriteComplete     
+                    ioRouter <! RWFileComplete     
                 return! reader()
             | _ ->                 
                 return! reader()
