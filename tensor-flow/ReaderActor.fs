@@ -42,11 +42,13 @@ let FileReaderActor (ioRouter: IActorRef) (writer: IActorRef) (mailbox: Actor<Re
                 match readImage {width = 28; height = 28} path with 
                 | Some image ->
                     let bytes = flat2dArray image
+                    logDebug mailbox "File read complete"
                     writer <! WriterWrite (mapPath2Label path, bytes)
                 | None ->
-                    ioRouter <! IORouterWriteComplete                                        
+                    logError mailbox <| sprintf "File read error : %A" path
+                    ioRouter <! IORouterWriteComplete     
                 return! reader()
-            | _ -> 
+            | _ ->                 
                 return! reader()
 
             return! reader()                

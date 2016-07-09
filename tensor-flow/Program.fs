@@ -17,6 +17,8 @@ let main argv =
     inputActor <! InputActor.InputCommand.Start
     
     myActorSystem.WhenTerminated.Wait()
+
+    System.Console.ReadKey() |> ignore
     
     //showImages 36 @"C:\dev\.data\notMNIST_normalized.csv"
 

@@ -45,9 +45,10 @@ let IORouterActor (mailbox: Actor<IORouterMessages>) =
                 files|> Array.iter (fun path -> reader <! (ReaderFileRead path))   
                 
                 return! waitComplete writer files.Length 
-            | IORouterWriteComplete -> 
+            | _ ->             
                 mailbox.Stash()
-                return! router()                                         
+                return! router()        
+            
                
         }
     and waitComplete (writer: IActorRef) (cnt: int) = 
@@ -57,12 +58,13 @@ let IORouterActor (mailbox: Actor<IORouterMessages>) =
             match message with
             | IORouterWriteComplete ->                
                 let leftCount = cnt - 1
-                logDebug mailbox <| sprintf "Stop file read  (left %i)" leftCount
-                if leftCount > 0 then
-                    return! waitComplete writer leftCount
-                else 
+                logDebug mailbox <| sprintf "File write complete (left %i)" leftCount
+                if leftCount = 0 then
                     logInfo mailbox "Stop writer"
-                    writer <! WriterStop
+                    async { return! writer <? WriterStop } |!> mailbox.Self
+                return! waitComplete writer leftCount
+            | IORouterWriterClosed ->                
+                mailbox.Context.System.Terminate() |> ignore                                            
             | _ ->
                 return! waitComplete writer cnt
     }

@@ -16,6 +16,7 @@ type WriterMessage =
     | WriterWrite of byte * byte array
     // stop to write
     | WriterStop
+   
 
 let WriterActor (ioRouter: IActorRef) (mailbox: Actor<WriterMessage>) = 
 
@@ -54,7 +55,7 @@ let WriterActor (ioRouter: IActorRef) (mailbox: Actor<WriterMessage>) =
                 return! writer()
             | WriterStop ->
                 close()
-                mailbox.Context.System.Terminate() |> ignore                                            
+                ioRouter <! IORouterWriterClosed
         }
 
     writer()
