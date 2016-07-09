@@ -18,8 +18,7 @@ let main argv =
     
     myActorSystem.WhenTerminated.Wait()
     
-
-    showImages 36 @"C:\dev\.data\notMNIST_normalized.csv"
+    //showImages 36 @"C:\dev\.data\notMNIST_normalized.csv"
 
                      
     0 // return an integer exit code

@@ -3,9 +3,7 @@
 //Create single writer actor and bunch of readers
 //While read could be done in parallel mapped outputs will be sync via single writer.
 
-// IORouter - create writer & readers
-// Reader, read files in parallel batches 
-// Writer write all messages in single output file.
+// IORouter - coordinator, spawn one writer and pool of redaer routers
 
 open System
 open Akka.Actor
@@ -35,7 +33,7 @@ let IORouterActor (mailbox: Actor<IORouterMessages>) =
                     | DirPath path -> path, "*"
                     | DirPathFilter(path, filter) -> (path, "*." + filter)
 
-                let routerOpt = SpawnOption.Router ( Akka.Routing.RoundRobinPool(10) )
+                let routerOpt = SpawnOption.Router ( Akka.Routing.RoundRobinPool(7) )
                 let supervisionOpt = SpawnOption.SupervisorStrategy (Strategy.OneForOne(fun _ ->
                      Directive.Resume
                 ))
@@ -59,12 +57,11 @@ let IORouterActor (mailbox: Actor<IORouterMessages>) =
             match message with
             | IORouterWriteComplete ->                
                 let leftCount = cnt - 1
-                printfn "Stop file read  (left %i)" leftCount
+                logDebug mailbox <| sprintf "Stop file read  (left %i)" leftCount
                 if leftCount > 0 then
                     return! waitComplete writer leftCount
                 else 
-                    printfn "stop"
-                    //Stop writer and stop actor
+                    logInfo mailbox "Stop writer"
                     writer <! WriterStop
             | _ ->
                 return! waitComplete writer cnt

@@ -81,13 +81,13 @@ let inputBasketActor (routerActor : IActorRef) (mailbox:Actor<_>) =
                 | ReadSuccess io -> 
                     match io with 
                     | InputBasketWithInputOutput paths ->
-                        printfn "Success %A" paths
+                        logInfo mailbox <| sprintf "Input success %A" paths
                         routerActor <! IORouterStart paths
                     |_ ->
-                        printfn "Thats strange"
+                        logWarning mailbox "Thats strange" 
                         return! input(InputBasketEmpty)                                    
                 | ReadError(err, Some(io)) ->                     
-                    printfn "Error %s ; %A" err io
+                    logWarning mailbox <| sprintf "Input error %s ; %A" err io
                     mailbox.Self <! ReadInput
                     return! input(io)           
                 | ReadExit ->
