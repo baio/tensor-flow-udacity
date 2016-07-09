@@ -1,10 +1,10 @@
-﻿module ImageFileReader
+﻿module DataProccessing.ImageFileReader
 
-open types
-open System.Drawing;
-open maybe;
-open utils;
+open Types
+open Utils
+open Maybe
 
+open System.Drawing
 
 let flat2dArray (arr : 'a[,]) : 'a[]=
     //2d array -> array of arrays
@@ -45,33 +45,15 @@ let readImage (imageSize : ImageSize) (path: string) : ImageInBW option =
     with 
     | _ -> None
 
+// Read all images from directory
 let readImages (imageSize : ImageSize) (dirPath: DirPath) (iamgePath2Label : string -> string) : LabeledImage seq = 
     
     getFilePaths dirPath
     |> Seq.choose (fun path ->                                
-        //With maybe computational expression
         maybe {
             let! image = readImage imageSize path
             return { label = (iamgePath2Label path); image = image }
         }
-        (*
-        //with infix bind
-        readImage imageSize path >>= (fun image -> Some { label = (iamgePath2Label path); image = image })
-        *)
-        (*
-        // with bind
-        Option.bind (fun image -> Some { label = (iamgePath2Label path); image = image }) (readImage imageSize path)
-        *)
-        (*
-        //With option map
-        Option.map (fun image -> { label = (iamgePath2Label path); image = image }) (readImage imageSize path)        
-        *)
-        (*
-        Simple
-        match readImage imageSize path with
-            | Some image -> Some({ label = (iamgePath2Label path); image = image })
-            | None -> None
-        *)
     )    
 
 

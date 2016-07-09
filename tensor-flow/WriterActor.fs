@@ -5,7 +5,6 @@ open System
 open Akka.Actor
 open Akka.FSharp
 open types
-open reader
 
 open Nessos.FsPickler
 

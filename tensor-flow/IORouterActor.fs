@@ -9,10 +9,11 @@ open System
 open Akka.Actor
 open Akka.FSharp
 open types
-open reader
+
 
 open WriterActor
 open ReaderActor
+open DataProccessing.Types
 
 
 let IORouterActor (mailbox: Actor<IORouterMessages>) = 

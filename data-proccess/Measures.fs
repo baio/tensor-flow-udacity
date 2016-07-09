@@ -1,4 +1,4 @@
-﻿module measures
+﻿module DataProccessing.Measures
 
 [<Measure>]
 type imageBytes =

@@ -3,8 +3,10 @@
 open System
 open Akka.Actor
 open Akka.FSharp
+
 open types
-open reader
+open DataProccessing.Reader
+open DataProccessing.Types
 
 type InputCommand = 
     | Start 

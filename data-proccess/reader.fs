@@ -1,4 +1,4 @@
-﻿module reader
+﻿module DataProccessing.Reader
 
 type ReadResult<'a, 'b> = 
     | ReadSuccess of 'a

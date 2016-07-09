@@ -55,13 +55,8 @@
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="maybe.fs" />
-    <Compile Include="reader.fs" />
-    <Compile Include="measures.fs" />
     <Compile Include="types.fs" />
-    <Compile Include="utils.fs" />
     <Compile Include="ShowImages.fs" />
-    <Compile Include="ImageFileReader.fs" />
     <Compile Include="WriterActor.fs" />
     <Compile Include="ReaderActor.fs" />
     <Compile Include="IORouterActor.fs" />
@@ -147,6 +142,11 @@
     <ProjectReference Include="..\charts\charts.fsproj">
       <Name>charts</Name>
       <Project>{2e680be2-c935-48b4-bbee-fc3ff8306673}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\data-proccess\DataProccessing.fsproj">
+      <Name>DataProccessing</Name>
+      <Project>{201d4178-f5c6-4bac-b5cc-70ef18187f76}</Project>
       <Private>True</Private>
     </ProjectReference>
   </ItemGroup>

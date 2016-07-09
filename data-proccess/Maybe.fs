@@ -1,4 +1,4 @@
-﻿module maybe
+﻿module DataProccessing.Maybe
 
 type MaybeBuilder() =
 

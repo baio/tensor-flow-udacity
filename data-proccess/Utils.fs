@@ -1,6 +1,6 @@
-﻿module utils
+﻿module DataProccessing.Utils
 
-open types
+open Types
 
 let rec getPathsRec (dirPath: string) : string seq =    
     System.IO.Directory.GetDirectories(dirPath)

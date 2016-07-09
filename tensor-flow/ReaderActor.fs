@@ -1,13 +1,14 @@
 ﻿module ReaderActor
 
-
 open System
 open Akka.Actor
 open Akka.FSharp
 open types
-open ImageFileReader
-open maybe
 open WriterActor
+
+open DataProccessing.Types
+open DataProccessing.ImageFileReader
+open DataProccessing.Maybe
 
 let INPUT_FILES_BATCH_SIZE = 5000
 // TODO 
@@ -34,7 +35,6 @@ let FileReaderActor (ioRouter: IActorRef) (writer: IActorRef) (mailbox: Actor<Re
         actor {
     
             let! msg = mailbox.Receive()
-            let parent = mailbox.Context.Sender
 
             match msg with 
             | ReaderFileRead path -> 
