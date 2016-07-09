@@ -5,11 +5,16 @@ open Akka.FSharp.Spawn
 open Akka.Actor
 open System.Drawing
 open ShowImages
+open Serilog
 
 [<EntryPoint>]
 let main argv = 
-    
-    
+
+    //http://localhost:5341/
+
+    let logger = (new LoggerConfiguration()).WriteTo.Seq("http://localhost:5341").MinimumLevel.Debug().CreateLogger()
+    Serilog.Log.Logger <- logger
+        
     let myActorSystem = System.create "MyActorSystem" (Configuration.load ())    
     let ioActor = spawn myActorSystem "ioActor" (IORouterActor.IORouterActor)
     let inputActor = spawn myActorSystem "inputActor" (InputActor.inputBasketActor ioActor)

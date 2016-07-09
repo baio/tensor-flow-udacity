@@ -58,7 +58,7 @@ let IORouterActor (mailbox: Actor<IORouterMessages>) =
             match message with
             | IORouterWriteComplete ->                
                 let leftCount = cnt - 1
-                logDebug mailbox <| sprintf "File write complete (left %i)" leftCount
+                logDebugf mailbox "File write complete (left %i)" leftCount
                 if leftCount = 0 then
                     logInfo mailbox "Stop writer"
                     async { return! writer <? WriterStop } |!> mailbox.Self
