@@ -25,7 +25,7 @@ let IORouterActor (mailbox: Actor<IORouterMessages>) =
             match msg with 
             | IORouterStart paths ->
 
-                let writer = spawn mailbox "writerActor" (WriterActor mailbox.Self)
+                let writer = spawn mailbox "Writer" (WriterActor mailbox.Self)
                 writer <! WriterStart paths.output                
                                                 
                 let path, filter = 
@@ -33,12 +33,12 @@ let IORouterActor (mailbox: Actor<IORouterMessages>) =
                     | DirPath path -> path, "*"
                     | DirPathFilter(path, filter) -> (path, "*." + filter)
 
-                let routerOpt = SpawnOption.Router ( Akka.Routing.RoundRobinPool(7) )
+                let routerOpt = SpawnOption.Router ( Akka.Routing.FromConfig.Instance )
                 let supervisionOpt = SpawnOption.SupervisorStrategy (Strategy.OneForOne(fun _ ->
                      Directive.Resume
                 ))
                                 
-                let reader = spawnOpt mailbox "batchReaderActor" (FileReaderActor mailbox.Self writer) [routerOpt; supervisionOpt]
+                let reader = spawnOpt mailbox "Reader" (FileReaderActor mailbox.Self writer) [routerOpt; supervisionOpt]
 
                 let files = System.IO.Directory.GetFiles(path, filter, IO.SearchOption.AllDirectories);
                                 
