@@ -47,9 +47,8 @@ let WriterActor (ioRouter: IActorRef) (mailbox: Actor<WriterMessage>) =
                 if streamWriter = null then
                     raise(Exception("Output file is not initialized"))
                 else
-                    //binarySerializer.Serialize(streamWriter, inputs, leaveOpen = true)
-                    let line = sprintf "%i%s" label (String.concat "" (inputs |> Array.map string))
-                    streamWriter.Write line
+                    streamWriter.Write label
+                    inputs |> Array.iter streamWriter.Write
                     streamWriter.Write "\n"
                     ioRouter <! IORouterWriteComplete
                 return! writer()
