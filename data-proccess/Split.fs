@@ -13,8 +13,6 @@ type TVTSamplePaths = TVTSamples<string>
 // Shuffle and split data set
 let splitTrainValidTest (linesNumber: int) (filePath: string) (sizes: TVTSampleSizes) (paths: TVTSamplePaths) =
 
-    let stopWatch = System.Diagnostics.Stopwatch.StartNew()
-
     if (sizes.test + sizes.train + sizes.validation > 100<percent>) then
         failwith("Sample sizes in sum must be less then 100%")
 
@@ -44,5 +42,3 @@ let splitTrainValidTest (linesNumber: int) (filePath: string) (sizes: TVTSampleS
     |> Stream.take testCount
     |> writeLinesS paths.test
     
-    stopWatch.Stop()
-    printfn "%f" stopWatch.Elapsed.TotalMilliseconds

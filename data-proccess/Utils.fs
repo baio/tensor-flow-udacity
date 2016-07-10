@@ -27,6 +27,26 @@ let writeLines (filePath:string) (lines: seq<string>) =
     lines |> Seq.iter sr.WriteLine
     sr.Close()
 
+let readLinesS (filePath:string) = 
+    let sr = new System.IO.StreamReader (filePath)
+
+    let eof() = 
+        if sr.EndOfStream then 
+            sr.Dispose()
+            true
+        else 
+            false
+    
+    let rl() = 
+        try
+            sr.ReadLine()
+        with e ->
+            sr.Dispose()
+            raise e
+
+    Stream.generateInfinite rl
+    |> Stream.takeWhile (fun _ -> eof() |> not)
+  
 let writeLinesS (filePath:string) (lines: Stream<string>) = 
     use sr = new System.IO.StreamWriter (filePath, false)
     lines |> Stream.iter sr.WriteLine

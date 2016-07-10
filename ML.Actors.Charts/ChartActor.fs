@@ -6,6 +6,7 @@ open Akka.Actor
 
 open DataProccessing.ReadImages
 open ML.Charts.R.Image
+open Nessos.Streams
 
 type ChartType = R
 
@@ -24,8 +25,8 @@ let ChartActor (mailbox:Actor<ChartMessgae>) =
             match message with 
             | ChartShow opts ->
                 getImagesBytes opts.DataPath
-                |> Seq.take opts.DataCount
-                |> Seq.toArray
+                |> Stream.take opts.DataCount
+                |> Stream.toArray
                 |> showImagesBW
                 return! chart()
             | ChartStore opts ->
