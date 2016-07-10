@@ -15,6 +15,7 @@ open ML.Actors.Init
 open ML.Actors.InputActor
 open ML.Actors.Image.ReadWriteCoordinatorActor
 open ML.Actors.Charts.ChartActor
+open ML.Actors.SplitSetActor
 
 type Settings = AppSettings<"app.config">
 
@@ -39,28 +40,42 @@ let main argv =
     let chartActor = spawn system "ChartActor" (ChartActor)    
 
     let rwActor = spawn system "ReadWriteCoordinator" (ReadWriteCoordinatorActor)
-    //let inputActor = spawn system "Input" (InputActor rwActor)
-
-   
-    let mainActor = spawn system "main" ( actorOf( fun msg ->
+    let splitSetActor = spawn system "SplitSetActor" (SplitSetActor)
+      
+    let mainActor = spawn system "main" ( actorOf2( fun mailbox msg ->
                     
-        match msg with 
-        | RWClosed(cnt, path) ->
-            shuffleSetFile cnt path Settings.ML_IMAGES_OUTPUT_SHUFFLED_FILE_PATH |> ignore
-            set2csv Settings.ML_IMAGES_OUTPUT_SHUFFLED_FILE_PATH Settings.ML_IMAGES_OUTPUT_SHUFFLED_FILE_PATH_CSV
-            splitTrainValidTest cnt Settings.ML_IMAGES_OUTPUT_SHUFFLED_FILE_PATH tvtSizes tvtPaths
-            chartActor <! ChartShow {ChartType = R; DataPath = Settings.ML_IMAGES_OUTPUT_SHUFFLED_FILE_PATH; DataCount = 36 }
+        match box msg with 
+        | :? RWMessage as rw ->
+            match rw with
+            | RWClosed(cnt, path) ->                            
+                async {             
+                    return! splitSetActor <? 
+                        TVTSplitSet({ InputFilePath = path; InputSamplesCount = cnt; Output = {Sizes = tvtSizes; Paths = tvtPaths} }) 
+
+                } |!> mailbox.Self                
+            | _ -> ()
+        | :? TVTSplitSetCommands as st ->
+            match st with 
+            | TVTSplitSetComplete ->                
+                printfn "finished"
+                //chartActor <! ChartShow {ChartType = R; DataPath = Settings.ML_IMAGES_OUTPUT_TRAIN_FILE_PATH; DataCount = 36 }
+                //System.Console.ReadKey() |> ignore
+                system.Terminate() |> ignore
+            | _ -> ()
         | _ -> ()
             
     ) )
 
     system.EventStream.Subscribe(mainActor, typedefof<RWMessage>) |> ignore
     
-    //inputActor <! Start
+  
     rwActor <! RWStart {
         input = DirPath Settings.ML_IMAGES_INPUT_DIR_PATH; 
         output = Settings.ML_IMAGES_OUTPUT_FILE_PATH
         }
+
+   
+    //mainActor <! RWClosed(100, Settings.ML_IMAGES_OUTPUT_FILE_PATH)
     
     system.WhenTerminated.Wait()
 

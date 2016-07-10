@@ -59,6 +59,7 @@
     <Compile Include="Image.ReadWriteCoordinatorActor.fs" />
     <Compile Include="InputActor.fs" />
     <Compile Include="Init.fs" />
+    <Compile Include="SplitSetActor.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Akka">

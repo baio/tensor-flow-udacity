@@ -3,22 +3,24 @@
 open Utils
 open Nessos.FsPickler
 
-//http://www.clear-lines.com/blog/post/Optimizing-some-old-F-code.aspx
-let shuffle (rng: System.Random) (length: int) (items : seq<_>)  =
-   let rec shuffleTo (indexes: int[]) upTo =
-      match upTo with
-      | 0 -> indexes
-      | _ ->
-         let fst = rng.Next(upTo)
-         let temp = indexes.[fst]
-         indexes.[fst] <- indexes.[upTo] 
-         indexes.[upTo] <- temp
-         shuffleTo indexes (upTo - 1)
-   let indexes = [| 0 .. length - 1 |]
-   let shuffled = shuffleTo indexes (length-1)
-   Seq.permute (fun i -> shuffled.[i]) items
+let swap (a: _[]) x y =
+    let tmp = a.[x]
+    a.[x] <- a.[y]
+    a.[y] <- tmp
 
+let generateShuffled (rng: System.Random) upTo =
+    let arr = [|0..upTo - 1|]
+    let random = new System.Random();    
+    arr |> Seq.iteri (fun i _ -> swap arr i (rng.Next(i, upTo))) 
+    arr
+        
+let shuffle (rng: System.Random) (length: int) (items : seq<_>) =
+    let shuffled = generateShuffled rng length    
+    items 
+    |> Seq.take length
+    |> Seq.permute (fun i -> shuffled.[i]) 
+    
 let shuffleSetFile linesNumber inFile outFile =
-    readLines inFile      
+    readLines inFile          
     |> shuffle (new System.Random()) linesNumber
     |> writeLines outFile
