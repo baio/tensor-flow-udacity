@@ -9,6 +9,7 @@ open DataProccessing.Measures
 open DataProccessing.Types
 open DataProccessing.Shuffle
 open DataProccessing.Split
+open DataProccessing.Utils
 open ML.Actors.Types
 open ML.Actors.Init
 open ML.Actors.InputActor
@@ -32,8 +33,6 @@ let tvtPaths = {
 [<EntryPoint>]
 let main argv = 
 
-
-
     InitLogger Settings.SeqUri.OriginalString
     
     let system = System.create "Images2DataSetActorSystem" (Configuration.load ())
@@ -48,6 +47,7 @@ let main argv =
         match msg with 
         | RWClosed(cnt, path) ->
             shuffleSetFile cnt path Settings.ML_IMAGES_OUTPUT_SHUFFLED_FILE_PATH |> ignore
+            set2csv Settings.ML_IMAGES_OUTPUT_SHUFFLED_FILE_PATH Settings.ML_IMAGES_OUTPUT_SHUFFLED_FILE_PATH_CSV
             splitTrainValidTest cnt Settings.ML_IMAGES_OUTPUT_SHUFFLED_FILE_PATH tvtSizes tvtPaths
             chartActor <! ChartShow {ChartType = R; DataPath = Settings.ML_IMAGES_OUTPUT_SHUFFLED_FILE_PATH; DataCount = 36 }
         | _ -> ()
@@ -63,6 +63,5 @@ let main argv =
         }
     
     system.WhenTerminated.Wait()
-
 
     0 // return an integer exit code

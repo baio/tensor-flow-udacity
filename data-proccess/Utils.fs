@@ -26,3 +26,10 @@ let writeLines (filePath:string) (lines: seq<string>) =
     lines |> Seq.iter sr.WriteLine
     sr.Close()
 
+let setLine2csvLine (setLine: string)  = 
+    Seq.fold (fun acc v -> acc + "," + (string v)) (string setLine.[0]) (Seq.skip 1 setLine)    
+   
+let set2csv setFilePath csvFilePath =     
+    readLines setFilePath
+    |> Seq.map setLine2csvLine
+    |> writeLines csvFilePath

@@ -18,10 +18,7 @@ let shuffle (rng: System.Random) (length: int) (items : seq<_>)  =
    let shuffled = shuffleTo indexes (length-1)
    Seq.permute (fun i -> shuffled.[i]) items
 
-
-let shuffleSetFileSeq linesNumber setFile  =        
-    shuffle (new System.Random()) linesNumber (readLines setFile)
-
-
 let shuffleSetFile linesNumber inFile outFile =
-    writeLines outFile (shuffleSetFileSeq linesNumber inFile)
+    readLines inFile      
+    |> shuffle (new System.Random()) linesNumber
+    |> writeLines outFile
