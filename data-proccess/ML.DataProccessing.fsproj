@@ -60,6 +60,7 @@
     <Compile Include="ReadImages.fs" />
     <Compile Include="ImageFileReader.fs" />
     <Compile Include="Shuffle.fs" />
+    <Compile Include="Split.fs" />
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
