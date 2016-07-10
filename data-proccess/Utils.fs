@@ -1,6 +1,7 @@
 ﻿module DataProccessing.Utils
 
 open Types
+open Nessos.Streams
 
 let rec getPathsRec (dirPath: string) : string seq =    
     System.IO.Directory.GetDirectories(dirPath)
@@ -24,6 +25,11 @@ let readLines (filePath:string) = seq {
 let writeLines (filePath:string) (lines: seq<string>) = 
     use sr = new System.IO.StreamWriter (filePath, false)
     lines |> Seq.iter sr.WriteLine
+    sr.Close()
+
+let writeLinesS (filePath:string) (lines: Stream<string>) = 
+    use sr = new System.IO.StreamWriter (filePath, false)
+    lines |> Stream.iter sr.WriteLine
     sr.Close()
 
 let setLine2csvLine (setLine: string)  = 

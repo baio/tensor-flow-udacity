@@ -1,7 +1,7 @@
 ﻿module DataProccessing.Shuffle
 
 open Utils
-open Nessos.FsPickler
+open Nessos.Streams
 
 let swap (a: _[]) x y =
     let tmp = a.[x]
@@ -18,9 +18,11 @@ let shuffle (rng: System.Random) (length: int) (items : seq<_>) =
     let shuffled = generateShuffled rng length    
     items 
     |> Seq.take length
-    |> Seq.permute (fun i -> shuffled.[i]) 
-    
-let shuffleSetFile linesNumber inFile outFile =
-    readLines inFile          
-    |> shuffle (new System.Random()) linesNumber
-    |> writeLines outFile
+    |> Seq.permute (fun i -> 
+        shuffled.[i]
+    ) 
+
+let shuffleS (rng: System.Random) (length: int) (items : array<_>) =
+    let shuffled = generateShuffled rng length    
+    Stream.initInfinite (fun i -> items.[shuffled.[i]])
+    |> Stream.take length

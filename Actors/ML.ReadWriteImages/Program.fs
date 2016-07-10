@@ -59,7 +59,7 @@ let main argv =
             | TVTSplitSetComplete ->                
                 printfn "finished"
                 //chartActor <! ChartShow {ChartType = R; DataPath = Settings.ML_IMAGES_OUTPUT_TRAIN_FILE_PATH; DataCount = 36 }
-                //System.Console.ReadKey() |> ignore
+                System.Console.ReadKey() |> ignore
                 system.Terminate() |> ignore
             | _ -> ()
         | _ -> ()
@@ -69,13 +69,15 @@ let main argv =
     system.EventStream.Subscribe(mainActor, typedefof<RWMessage>) |> ignore
     
   
+    (*
     rwActor <! RWStart {
         input = DirPath Settings.ML_IMAGES_INPUT_DIR_PATH; 
         output = Settings.ML_IMAGES_OUTPUT_FILE_PATH
         }
+    *)
 
    
-    //mainActor <! RWClosed(100, Settings.ML_IMAGES_OUTPUT_FILE_PATH)
+    mainActor <! RWClosed(10000, Settings.ML_IMAGES_OUTPUT_FILE_PATH)
     
     system.WhenTerminated.Wait()
 
