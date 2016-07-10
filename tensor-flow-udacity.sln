@@ -19,8 +19,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		data\examples\multi.csv = data\examples\multi.csv
 	EndProjectSection
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "tensor-flow-read-images", "tensor-flow\tensor-flow-read-images.fsproj", "{AD15A432-5F5C-40C1-A9D9-A1FE5A529516}"
-EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "ML.Charts.R", "charts\ML.Charts.R.fsproj", "{2E680BE2-C935-48B4-BBEE-FC3FF8306673}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "tesnor-flow-mingle-samples", "tesnor-flow-mingle-inputs\tesnor-flow-mingle-samples.fsproj", "{A9B3114F-3614-4273-B1E7-C5FF1EFC05F2}"
@@ -61,10 +59,6 @@ Global
 		{932D88BC-464E-4993-9BBA-37508BCC0385}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{932D88BC-464E-4993-9BBA-37508BCC0385}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{932D88BC-464E-4993-9BBA-37508BCC0385}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AD15A432-5F5C-40C1-A9D9-A1FE5A529516}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AD15A432-5F5C-40C1-A9D9-A1FE5A529516}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AD15A432-5F5C-40C1-A9D9-A1FE5A529516}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AD15A432-5F5C-40C1-A9D9-A1FE5A529516}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2E680BE2-C935-48B4-BBEE-FC3FF8306673}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2E680BE2-C935-48B4-BBEE-FC3FF8306673}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E680BE2-C935-48B4-BBEE-FC3FF8306673}.Release|Any CPU.ActiveCfg = Release|Any CPU

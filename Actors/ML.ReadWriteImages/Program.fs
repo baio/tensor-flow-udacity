@@ -6,6 +6,7 @@ open Akka.Actor
 open FSharp.Configuration
 
 open DataProccessing.Types
+open DataProccessing.Shuffle
 open ML.Actors.Types
 open ML.Actors.Init
 open ML.Actors.InputActor
@@ -28,8 +29,9 @@ let main argv =
     let mainActor = spawn system "main" ( actorOf( fun msg ->
                     
         match msg with 
-        | RWClosed path ->
-            chartActor <! ChartShow {ChartType = R; DataPath = path; DataCount = 36 }
+        | RWClosed(cnt, path) ->
+            shuffleSetFile cnt path Settings.ML_IMAGES_OUTPUT_SHUFFLED_FILE_PATH |> ignore
+            chartActor <! ChartShow {ChartType = R; DataPath = Settings.ML_IMAGES_OUTPUT_SHUFFLED_FILE_PATH; DataCount = 36 }
         | _ -> ()
             
     ) )

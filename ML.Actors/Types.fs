@@ -5,7 +5,7 @@ open DataProccessing.Types
 type RWMessage = 
     | RWStart of InputOutputPaths
     | RWFileComplete
-    | RWClosed of string
+    | RWClosed of int * string
 
     
 

@@ -17,8 +17,9 @@ type WriterMessage =
 
 let WriterActor (ioRouter: IActorRef) (mailbox: Actor<WriterMessage>) = 
 
-    let mutable streamWriter : System.IO.StreamWriter = null;
-    let mutable streamPath = null;
+    let mutable streamWriter : System.IO.StreamWriter = null
+    let mutable streamPath = null
+    let mutable cnt = 0
 
     let close () =  
         if streamWriter <> null then
@@ -49,10 +50,11 @@ let WriterActor (ioRouter: IActorRef) (mailbox: Actor<WriterMessage>) =
                     inputs |> Array.iter streamWriter.Write
                     streamWriter.Write "\n"
                     ioRouter <! RWFileComplete
+                    cnt <- cnt + 1
                 return! writer()
             | WriterStop ->
                 close()
-                ioRouter <! RWClosed streamPath
+                ioRouter <! RWClosed(cnt, streamPath)
         }
 
     writer()
