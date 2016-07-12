@@ -33,6 +33,10 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "ML.ReadWriteImages", "Actor
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "ML.Actors.Charts", "ML.Actors.Charts\ML.Actors.Charts.fsproj", "{08C60202-67FA-4724-BD6C-2221DABC1A8F}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "ML.Math", "ML.Math\ML.Math.fsproj", "{C540661F-D2E8-450A-934B-F9A4C1C88E2C}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "ML.RunModel", "ML.RunModel\ML.RunModel.fsproj", "{6EA232F4-7C77-4A6D-BE17-44DDF6DC8364}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,11 +87,20 @@ Global
 		{08C60202-67FA-4724-BD6C-2221DABC1A8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08C60202-67FA-4724-BD6C-2221DABC1A8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{08C60202-67FA-4724-BD6C-2221DABC1A8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C540661F-D2E8-450A-934B-F9A4C1C88E2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C540661F-D2E8-450A-934B-F9A4C1C88E2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C540661F-D2E8-450A-934B-F9A4C1C88E2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C540661F-D2E8-450A-934B-F9A4C1C88E2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6EA232F4-7C77-4A6D-BE17-44DDF6DC8364}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6EA232F4-7C77-4A6D-BE17-44DDF6DC8364}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6EA232F4-7C77-4A6D-BE17-44DDF6DC8364}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6EA232F4-7C77-4A6D-BE17-44DDF6DC8364}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{8FE53BB4-E14F-4D88-BCCE-8E027994E48C} = {34E943D6-3B55-4B64-B78E-084D287275CF}
+		{6EA232F4-7C77-4A6D-BE17-44DDF6DC8364} = {34E943D6-3B55-4B64-B78E-084D287275CF}
 	EndGlobalSection
 EndGlobal

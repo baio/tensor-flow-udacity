@@ -70,6 +70,11 @@
       <Project>{08c60202-67fa-4724-bd6c-2221dabc1a8f}</Project>
       <Private>True</Private>
     </ProjectReference>
+    <ProjectReference Include="..\..\ML.Math\ML.Math.fsproj">
+      <Name>ML.Math</Name>
+      <Project>{c540661f-d2e8-450a-934b-f9a4c1c88e2c}</Project>
+      <Private>True</Private>
+    </ProjectReference>
     <Reference Include="Akka">
       <HintPath>..\..\packages\Akka.1.1.0\lib\net45\Akka.dll</HintPath>
       <Private>True</Private>
