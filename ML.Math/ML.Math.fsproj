@@ -64,6 +64,7 @@
     <Compile Include="Types.fs" />
     <Compile Include="Utils.fs" />
     <Compile Include="GLM.fs" />
+    <Compile Include="LinearRegression.fs" />
     <Compile Include="SoftmaxRegression.fs" />
     <Compile Include="RunModel.fs" />
   </ItemGroup>

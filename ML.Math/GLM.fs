@@ -27,10 +27,10 @@ type IterativeTrainModelParams = {
 //Given hypothesis function return Sum Square Error Function
 let GenSSELossAngGradient (hypFunc: HypothesisFunc)  =
     
-    let SSELoss (weights: float array) (features : float[] array) (labels : float array) = 
-        let calcHyp i = (hypFunc weights features.[i]) - labels.[i]
+    let SSELoss (weights: float array) (inputs : float[] array) (outputs : float array) = 
+        let calcHyp i = (hypFunc weights inputs.[i]) - outputs.[i]
         let loss = 
-            features 
+            inputs
             |> Array.mapi (fun i _ -> System.Math.Pow(calcHyp i, 2.) ) 
             |> Array.sum
         loss / 2.
@@ -46,35 +46,37 @@ let GenSSELossAngGradient (hypFunc: HypothesisFunc)  =
 
     SSELoss, SSEGradient
 
-let hypLinear (weights: float[]) (features: float[]) = 
-     weights |> Array.mapi (fun i w -> w * features.[i] )
-
 // returns true, weights - if error threshold achieved
 // fales, weights - if max number of iterations achieved
-let trainIterativeModel 
+let trainRegressionIterative
     (model: GLMModel) 
     (prms: IterativeTrainModelParams) 
-    (features : float[] array) 
-    (labels : float array) =                      
+    (inputs : float[] array) 
+    (outputs : float array) =                      
+        
+        let biasInputs = inputs |> Array.map (fun f -> Array.concat([f; [|1.|]]))   
         
         let rec iter weights iterCnt =
-            let error = model.Loss weights features labels
+            let error = model.Loss weights biasInputs outputs
             if error <= prms.MinErrorThreshold then
                 true, weights
             else if prms.MaxIterNumber < iterCnt then
                 false, weights
             else 
-                let gradients = model.Gradient weights features labels
+                let gradients = model.Gradient weights biasInputs outputs
                 let updatedWeights = gradients |> Array.mapi (fun i w -> w + gradients.[i])
                 iter updatedWeights (iterCnt + 1)
                 
         // initialize random weights
         let rnd = new System.Random()
         let gauss () = nextGaussianStd rnd
-        let initialWeights = Array.init features.[0].Length (fun _ -> gauss())                
+        let initialWeights = Array.init biasInputs.[0].Length (fun _ -> gauss())                
         
         iter initialWeights 0
             
-
-
+//input - just features
+//weights - weights for features + one for bias
+let predictOutput (hyp: HypothesisFunc) (weights: float[]) (input: float[]) =
+    let biasInput = Array.concat([input; [|1.|]])
+    hyp weights biasInput 
     
