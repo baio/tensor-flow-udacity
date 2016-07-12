@@ -64,7 +64,7 @@ let trainRegressionIterative
                 false, weights
             else 
                 let gradients = model.Gradient weights biasInputs outputs
-                let updatedWeights = gradients |> Array.mapi (fun i w -> w + gradients.[i])
+                let updatedWeights = gradients |> Array.mapi (fun i w -> w - gradients.[i])
                 iter updatedWeights (iterCnt + 1)
                 
         // initialize random weights
