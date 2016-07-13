@@ -1,4 +1,5 @@
-﻿module ML.Math.LinearRegression
+﻿module ML.Math.GLM
+
 open ML.Math.Utils
 
 // GLM 
@@ -6,6 +7,8 @@ open ML.Math.Utils
 
 // Given weights and features return calculated label
 type HypothesisFunc = float [] -> float [] -> float
+// Calculate derivative of the hypothesis function for particular feature given this feature and weights
+type HypothesisDerivFunc = float -> float [] -> float
 // Given weights, features and labels calculate error
 type LossFunc = float [] -> float [][] -> float[] -> float
 // Given weights, features and labels calculate gradient array for weights
@@ -24,27 +27,22 @@ type IterativeTrainModelParams = {
     MinErrorThreshold : float
 }
 
-//Given hypothesis function return Sum Square Error Function
-let GenSSELossAngGradient (hypFunc: HypothesisFunc)  =
-    
-    let SSELoss (weights: float array) (inputs : float[] array) (outputs : float array) = 
-        let calcHyp i = (hypFunc weights inputs.[i]) - outputs.[i]
-        let loss = 
-            inputs
-            |> Array.mapi (fun i _ -> System.Math.Pow(calcHyp i, 2.) ) 
-            |> Array.sum
-        loss / 2.
+let SSELoss (hypFunc: HypothesisFunc) (weights: float array) (inputs : float[] array) (outputs : float array) = 
+    let hypError i = (hypFunc weights inputs.[i]) - outputs.[i]
+    let loss = 
+        inputs
+        |> Array.mapi (fun i _ -> System.Math.Pow(hypError i, 2.) ) 
+        |> Array.sum
+    loss / 2.
         
-    let SSEGradient (weights: float array) (features : float[] array) (labels : float array) =
-        let calcHyp i = (hypFunc weights features.[i]) - labels.[i]
-        weights
-        |> Array.mapi (fun j _ ->         
-            features 
-            |> Array.mapi (fun i _ -> features.[i].[j] * (calcHyp i))            
-            |> Array.sum
-         )  
-
-    SSELoss, SSEGradient
+let SSEGradient (hypFunc: HypothesisFunc) (hypFunc': HypothesisDerivFunc) (weights: float array) (inputs : float[] array) (outputs : float array) =
+    let hypError i = (hypFunc weights inputs.[i]) - outputs.[i]
+    weights
+    |> Array.mapi (fun j _ ->         
+        inputs 
+        |> Array.mapi (fun i _ -> (hypFunc' inputs.[i].[j] inputs.[i]) * (hypError i))            
+        |> Array.sum
+    )  
 
 // returns true, weights - if error threshold achieved
 // fales, weights - if max number of iterations achieved
