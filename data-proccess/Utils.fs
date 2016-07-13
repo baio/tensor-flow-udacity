@@ -59,3 +59,17 @@ let set2csv setFilePath csvFilePath =
     readLines setFilePath
     |> Seq.map setLine2csvLine
     |> writeLines csvFilePath
+
+// raed csv, all columns contains decimal numbers
+let readCSV (filePath:string) isHeader (inputCols: int[]) (outputCol: int)= 
+    let mapLine (str: string) = 
+        let cols = str.Split([|','|])
+        let outs = seq { for i in inputCols -> System.Double.Parse(string cols.[i]) } |> Seq.toArray
+        outs, System.Double.Parse(cols.[outputCol])
+        
+    readLinesS filePath
+    |> Stream.skip (if isHeader then 1 else 0)
+    |> Stream.map mapLine
+    |> Stream.toArray
+    |> Array.unzip
+

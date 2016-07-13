@@ -7,8 +7,6 @@ open ML.Math.Utils
 
 // Given weights and features return calculated label
 type HypothesisFunc = float [] -> float [] -> float
-// Calculate derivative of the hypothesis function for particular feature given this feature and weights
-type HypothesisDerivFunc = float -> float [] -> float
 // Given weights, features and labels calculate error
 type LossFunc = float [] -> float [][] -> float[] -> float
 // Given weights, features and labels calculate gradient array for weights
@@ -25,6 +23,7 @@ type GLMModel = {
 type IterativeTrainModelParams = {
     MaxIterNumber : int
     MinErrorThreshold : float
+    StepSize: float
 }
 
 let SSELoss (hypFunc: HypothesisFunc) (weights: float array) (inputs : float[] array) (outputs : float array) = 
@@ -35,18 +34,18 @@ let SSELoss (hypFunc: HypothesisFunc) (weights: float array) (inputs : float[] a
         |> Array.sum
     loss / 2.
         
-let SSEGradient (hypFunc: HypothesisFunc) (hypFunc': HypothesisDerivFunc) (weights: float array) (inputs : float[] array) (outputs : float array) =
+let SSEGradient (hypFunc: HypothesisFunc) (weights: float array) (inputs : float[] array) (outputs : float array) =
     let hypError i = (hypFunc weights inputs.[i]) - outputs.[i]
     weights
     |> Array.mapi (fun j _ ->         
         inputs 
-        |> Array.mapi (fun i _ -> (hypFunc' inputs.[i].[j] inputs.[i]) * (hypError i))            
+        |> Array.mapi (fun i _ -> inputs.[i].[j] * (hypError i))            
         |> Array.sum
     )  
 
 // returns true, weights - if error threshold achieved
 // fales, weights - if max number of iterations achieved
-let trainRegressionIterative
+let trainGradientDescent
     (model: GLMModel) 
     (prms: IterativeTrainModelParams) 
     (inputs : float[] array) 
@@ -60,16 +59,18 @@ let trainRegressionIterative
                 true, weights
             else if prms.MaxIterNumber < iterCnt then
                 false, weights
+            //TODO : or not become better
             else 
-                let gradients = model.Gradient weights biasInputs outputs
-                let updatedWeights = gradients |> Array.mapi (fun i w -> w - gradients.[i])
+                let gradients = model.Gradient weights biasInputs outputs                
+                //If graient is plus thwn we need to move down to achive function min
+                let updatedWeights = 
+                    weights 
+                    |> Array.mapi (fun i w -> w - prms.StepSize * gradients.[i])
+                printfn "%i: \n grads: %A \n weights : %A" iterCnt gradients updatedWeights
                 iter updatedWeights (iterCnt + 1)
                 
         // initialize random weights
-        let rnd = new System.Random()
-        let gauss () = nextGaussianStd rnd
-        let initialWeights = Array.init biasInputs.[0].Length (fun _ -> gauss())                
-        
+        let initialWeights = Array.zeroCreate biasInputs.[0].Length         
         iter initialWeights 0
             
 //input - just features
