@@ -2,9 +2,10 @@
 // See the 'F# Tutorial' project for more help.
 
 
-open DataProccessing.Utils;
-open ML.Math.GLM;
-open ML.Math.LinearRegression;
+open DataProccessing.Utils
+open ML.Math.GLM
+open ML.Math.BatchGradientDescent
+open ML.Math.LinearRegression
 
 [<EntryPoint>]
 let main argv =
@@ -23,18 +24,19 @@ let main argv =
         0.
         1.
         2.
-        4.
+        3.
      |]
     let model = {
-        Hypothesis = linearHyp;
-        Loss = SSELoss linearHyp;
-        Gradient = SSEGradient linearHyp;
+        Hypothesis = linearHyp
+        Loss = SSELoss linearHyp
+        Gradient = SSEGradient linearHyp
     }
     let prms = {
-        MaxIterNumber = 10000;
-        MinErrorThreshold = 0.00001;
-        StepSize = 0.05;
+        MaxIterNumber = 10000
+        MinErrorThreshold = 0.
+        StepSize = 0.1
     }
-    let ws = trainGradientDescent model prms inputs outputs
+    let ws = batchGradientDescent model prms inputs outputs
+    printfn "%A" ws
     System.Console.ReadLine() |> ignore
     0 // return an integer exit code
